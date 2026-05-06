@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPrompt for Copilot</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>AutoPrompt for Copilot</h1>
+    </header>
+
+    <div class="mode-toggle">
+      <button id="btn-sample" class="mode-btn active" data-mode="sample">Sample</button>
+      <button id="btn-custom" class="mode-btn" data-mode="custom">Custom</button>
+    </div>
+
+    <!-- Sample Mode Panel -->
+    <div id="panel-sample" class="panel active">
+      <label for="category-select">Category</label>
+      <select id="category-select"></select>
+
+      <div id="prompt-list" class="prompt-list"></div>
+
+      <div class="prompt-count">
+        <span id="sample-count">0</span> prompts selected
+      </div>
+    </div>
+
+    <!-- Custom Mode Panel -->
+    <div id="panel-custom" class="panel">
+      <label>Upload a file (.txt, .csv, .json)</label>
+      <div class="file-upload">
+        <input type="file" id="file-input" accept=".txt,.csv,.json">
+        <label for="file-input" class="file-label" id="file-label">Choose File</label>
+        <span id="file-name" class="file-name">No file chosen</span>
+      </div>
+
+      <div class="separator">or paste prompts (one per line)</div>
+
+      <textarea id="custom-prompts" rows="6" placeholder="What is machine learning?&#10;Explain neural networks&#10;What is gradient descent?"></textarea>
+
+      <div class="prompt-count">
+        <span id="custom-count">0</span> prompts loaded
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings">
+      <label for="delay-select">Delay between prompts</label>
+      <select id="delay-select">
+        <option value="3">3 seconds</option>
+        <option value="5" selected>5 seconds</option>
+        <option value="10">10 seconds</option>
+        <option value="15">15 seconds</option>
+        <option value="30">30 seconds</option>
+      </select>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress-section" class="progress-section hidden">
+      <div class="progress-header">
+        <span id="progress-label" class="progress-text">0 / 0 prompts</span>
+        <span id="countdown" class="countdown hidden">--</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="status hidden"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="btn-start" class="btn btn-start">Start</button>
+      <button id="btn-pause" class="btn btn-pause hidden">Pause</button>
+      <button id="btn-resume" class="btn btn-resume hidden">Resume</button>
+      <button id="btn-stop" class="btn btn-stop hidden">Stop</button>
+    </div>
+  </div>
+
+  <script src="../utils/parser.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,3 +1,10 @@
+// Open the landing page on first install
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    chrome.tabs.create({ url: chrome.runtime.getURL('landing/landing.html') });
+  }
+});
+
 let queue = [];
 let tabId = null;
 let delay = 5;

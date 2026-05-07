@@ -150,6 +150,108 @@ function getCustomPrompts() {
     .filter(l => l.length > 0);
 }
 
+// --- Custom Delay ---
+
+$('delay-select').addEventListener('change', (e) => {
+  $('custom-delay').classList.toggle('hidden', e.target.value !== 'custom');
+});
+
+function getDelay() {
+  const val = $('delay-select').value;
+  if (val === 'custom') {
+    const custom = parseInt($('custom-delay-input').value);
+    return (isNaN(custom) || custom < 1) ? 5 : Math.min(custom, 300);
+  }
+  return parseInt(val);
+}
+
+// --- Save / Load Prompts ---
+
+$('btn-save-prompts').addEventListener('click', saveCustomPrompts);
+$('btn-load-prompts').addEventListener('click', toggleSavedPanel);
+$('btn-close-saved').addEventListener('click', () => {
+  $('saved-prompts-panel').classList.add('hidden');
+});
+
+async function saveCustomPrompts() {
+  const prompts = getCustomPrompts();
+  if (prompts.length === 0) {
+    showStatus('No prompts to save.', 'error');
+    return;
+  }
+
+  const name = prompt('Name for this prompt set:', `My Prompts (${prompts.length})`);
+  if (!name) return;
+
+  const { savedPrompts = [] } = await chrome.storage.local.get('savedPrompts');
+  savedPrompts.push({
+    id: Date.now(),
+    name: name.trim(),
+    prompts,
+    date: new Date().toLocaleDateString()
+  });
+  await chrome.storage.local.set({ savedPrompts });
+  showStatus(`Saved "${name.trim()}" (${prompts.length} prompts).`, 'success');
+  renderSavedPrompts(savedPrompts);
+  $('saved-prompts-panel').classList.remove('hidden');
+}
+
+async function toggleSavedPanel() {
+  const panel = $('saved-prompts-panel');
+  if (!panel.classList.contains('hidden')) {
+    panel.classList.add('hidden');
+    return;
+  }
+  const { savedPrompts = [] } = await chrome.storage.local.get('savedPrompts');
+  renderSavedPrompts(savedPrompts);
+  panel.classList.remove('hidden');
+}
+
+function renderSavedPrompts(list) {
+  const container = $('saved-prompts-list');
+  if (list.length === 0) {
+    container.innerHTML = '<div class="saved-empty">No saved prompts yet</div>';
+    return;
+  }
+  container.innerHTML = list.map(item => `
+    <div class="saved-item" data-id="${item.id}">
+      <div class="saved-item-info" data-id="${item.id}">
+        <span class="saved-item-name">${item.name}</span>
+        <span class="saved-item-meta">${item.prompts.length} prompts · ${item.date}</span>
+      </div>
+      <div class="saved-item-actions">
+        <button class="saved-item-btn load" data-id="${item.id}" title="Load">▶</button>
+        <button class="saved-item-btn delete" data-id="${item.id}" title="Delete">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+$('saved-prompts-list').addEventListener('click', async (e) => {
+  const btn = e.target.closest('.saved-item-btn');
+  const info = e.target.closest('.saved-item-info');
+  if (!btn && !info) return;
+
+  const id = parseInt((btn || info).dataset.id);
+  const { savedPrompts = [] } = await chrome.storage.local.get('savedPrompts');
+  const item = savedPrompts.find(s => s.id === id);
+
+  if (btn && btn.classList.contains('delete')) {
+    const updated = savedPrompts.filter(s => s.id !== id);
+    await chrome.storage.local.set({ savedPrompts: updated });
+    renderSavedPrompts(updated);
+    showStatus('Deleted.', 'info');
+    return;
+  }
+
+  if (item) {
+    $('custom-prompts').value = item.prompts.join('\n');
+    updateCustomCount();
+    $('saved-prompts-panel').classList.add('hidden');
+    showStatus(`Loaded "${item.name}" (${item.prompts.length} prompts).`, 'success');
+  }
+});
+
 // --- Controls ---
 
 $('btn-start').addEventListener('click', startBatch);
@@ -190,7 +292,7 @@ async function startBatch() {
   port.postMessage({
     action: 'startBatch',
     prompts: currentPrompts,
-    delay: parseInt($('delay-select').value),
+    delay: getDelay(),
     tabId: tab.id
   });
 }

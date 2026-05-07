@@ -138,10 +138,154 @@ select:focus {
 }
 
 .prompt-count {
-  margin-top: 8px;
+  margin-top: 0;
   font-size: 11px;
   color: #888;
   text-align: right;
+}
+
+/* Custom bottom row */
+.custom-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.saved-prompts-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icon {
+  padding: 4px 10px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 5px;
+  color: #ccc;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-icon:hover {
+  background: #334155;
+  border-color: #2dd4bf;
+  color: #fff;
+}
+
+/* Saved Prompts Panel */
+.saved-prompts-panel {
+  margin-top: 10px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #1e293b;
+  overflow: hidden;
+}
+
+.saved-prompts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: #162032;
+  border-bottom: 1px solid #334155;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2dd4bf;
+}
+
+.btn-close-saved {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.btn-close-saved:hover {
+  color: #fca5a5;
+}
+
+.saved-prompts-list {
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.saved-prompts-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.saved-prompts-list::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+
+.saved-empty {
+  padding: 14px;
+  text-align: center;
+  font-size: 11px;
+  color: #555;
+}
+
+.saved-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-bottom: 1px solid #334155;
+  gap: 6px;
+}
+
+.saved-item:last-child {
+  border-bottom: none;
+}
+
+.saved-item-info {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.saved-item-name {
+  font-size: 12px;
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.saved-item-meta {
+  font-size: 10px;
+  color: #555;
+}
+
+.saved-item-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.saved-item-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.saved-item-btn:hover {
+  background: #334155;
+}
+
+.saved-item-btn.delete:hover {
+  background: #4a1d1d;
 }
 
 /* File Upload */
@@ -237,6 +381,42 @@ textarea::placeholder {
 
 .settings select {
   margin-top: 2px;
+}
+
+/* Custom Delay Input */
+.custom-delay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.custom-delay input[type="number"] {
+  flex: 1;
+  padding: 8px 10px;
+  background: #1e293b;
+  color: #e0e0e0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.custom-delay input[type="number"]:focus {
+  border-color: #2dd4bf;
+}
+
+.custom-delay input[type="number"]::-webkit-inner-spin-button,
+.custom-delay input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.custom-delay-unit {
+  font-size: 12px;
+  color: #888;
+  white-space: nowrap;
 }
 
 /* Progress */

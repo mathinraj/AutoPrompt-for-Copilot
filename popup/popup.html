@@ -42,8 +42,25 @@
 
       <textarea id="custom-prompts" rows="6" placeholder="What is machine learning?&#10;Explain neural networks&#10;What is gradient descent?"></textarea>
 
-      <div class="prompt-count">
-        <span id="custom-count">0</span> prompts loaded
+      <div class="custom-bottom-row">
+        <div class="prompt-count">
+          <span id="custom-count">0</span> prompts loaded
+        </div>
+        <div class="saved-prompts-actions">
+          <button id="btn-save-prompts" class="btn-icon" title="Save prompts">💾 Save</button>
+          <button id="btn-load-prompts" class="btn-icon" title="Load saved prompts">📂 Load</button>
+        </div>
+      </div>
+
+      <!-- Saved Prompts List -->
+      <div id="saved-prompts-panel" class="saved-prompts-panel hidden">
+        <div class="saved-prompts-header">
+          <span>Saved Prompts</span>
+          <button id="btn-close-saved" class="btn-close-saved">✕</button>
+        </div>
+        <div id="saved-prompts-list" class="saved-prompts-list">
+          <div class="saved-empty">No saved prompts yet</div>
+        </div>
       </div>
     </div>
 
@@ -56,7 +73,12 @@
         <option value="10">10 seconds</option>
         <option value="15">15 seconds</option>
         <option value="30">30 seconds</option>
+        <option value="custom">Custom...</option>
       </select>
+      <div id="custom-delay" class="custom-delay hidden">
+        <input type="number" id="custom-delay-input" min="1" max="300" value="20" placeholder="seconds">
+        <span class="custom-delay-unit">sec</span>
+      </div>
     </div>
 
     <!-- Progress -->

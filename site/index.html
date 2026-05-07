@@ -3,13 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoPrompt for Copilot — Batch Prompt Automation</title>
-  <meta name="description" content="A Chrome extension to automate batch prompts on Microsoft Copilot. Run sample or custom prompts one after another, hands-free.">
+  <title>AutoPrompt for Copilot — Batch Prompt Automation for Microsoft Copilot</title>
+  <meta name="description" content="AutoPrompt is a free Chrome extension that automates batch prompts on Microsoft Copilot. Run sample or custom prompts one after another — no copy-paste, fully hands-free. Supports .txt, .csv, and .json files.">
+  <meta name="keywords" content="AutoPrompt, Microsoft Copilot, batch prompts, Chrome extension, Copilot automation, AI prompts, prompt automation, bulk prompts, Copilot batch, prompt runner, Copilot extension, AI productivity">
+  <meta name="author" content="AutoPrompt">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0d9488">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://auto-prompt-for-copilot.vercel.app/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://auto-prompt-for-copilot.vercel.app/">
+  <meta property="og:title" content="AutoPrompt for Copilot — Batch Prompt Automation">
+  <meta property="og:description" content="A free Chrome extension to automate batch prompts on Microsoft Copilot. Run dozens of prompts hands-free with sample or custom mode.">
+  <meta property="og:image" content="https://auto-prompt-for-copilot.vercel.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="AutoPrompt for Copilot">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://auto-prompt-for-copilot.vercel.app/">
+  <meta name="twitter:title" content="AutoPrompt for Copilot — Batch Prompt Automation">
+  <meta name="twitter:description" content="Automate batch prompts on Microsoft Copilot. Run sample or custom prompts one after another — no copy-paste needed.">
+  <meta name="twitter:image" content="https://auto-prompt-for-copilot.vercel.app/og-image.png">
+
+  <!-- Favicons -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="../icons/icon48.png" type="image/png">
   <script src="https://kit.fontawesome.com/5432a717c1.js" crossorigin="anonymous"></script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AutoPrompt for Copilot",
+    "description": "A free Chrome extension that automates batch prompts on Microsoft Copilot. Run sample or custom prompts one after another, hands-free.",
+    "url": "https://auto-prompt-for-copilot.vercel.app/",
+    "applicationCategory": "BrowserApplication",
+    "operatingSystem": "Chrome, Chromium",
+    "browserRequirements": "Requires Google Chrome or any Chromium-based browser supporting Manifest V3",
+    "softwareVersion": "1.0.0",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "image": "https://auto-prompt-for-copilot.vercel.app/og-image.png",
+    "screenshot": "https://auto-prompt-for-copilot.vercel.app/og-image.png",
+    "featureList": [
+      "Batch prompt automation for Microsoft Copilot",
+      "Built-in sample prompts across multiple categories",
+      "Custom prompts via text, CSV, or JSON files",
+      "Configurable delay between prompts",
+      "Pause, resume, and stop controls",
+      "Live progress tracking with countdown timer",
+      "On-page status overlay"
+    ]
+  }
+  </script>
 </head>
 <body>
+
+  <!-- Skip to content for accessibility -->
+  <a href="#features" class="skip-link">Skip to content</a>
 
   <!-- Navbar -->
   <nav class="navbar">
@@ -38,8 +102,10 @@
     </div>
   </nav>
 
+  <main>
+
   <!-- Hero -->
-  <section class="hero">
+  <section class="hero" aria-label="Introduction">
     <div class="hero-glow"></div>
     <div class="hero-glow-2"></div>
     <div class="container">
@@ -262,8 +328,10 @@
     </div>
   </section>
 
+  </main>
+
   <!-- Footer -->
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="container footer-inner">
       <div class="footer-brand">
         <span class="nav-logo">⚡</span> AutoPrompt for Copilot

@@ -39,6 +39,24 @@ code {
 
 .hidden { display: none !important; }
 
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  padding: 12px 20px;
+  background: #0d9488;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 200;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
 /* ========== Buttons ========== */
 .btn {
   display: inline-flex;

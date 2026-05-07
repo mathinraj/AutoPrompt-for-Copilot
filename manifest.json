@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AutoPrompt for Copilot",
   "version": "1.0.0",
-  "description": "Automate batch prompts on Microsoft Copilot — run sample or custom prompts, one after another.",
+  "description": "Automate batch prompts on Microsoft Copilot. Run sample or custom prompts one after another — hands-free. Upload .txt, .csv, or .json files. Pause, resume, and track live progress.",
   "permissions": ["storage", "tabs", "scripting"],
   "host_permissions": ["https://copilot.microsoft.com/*"],
   "content_scripts": [

@@ -86,6 +86,7 @@
         <a href="#how-it-works">How It Works</a>
         <a href="#formats">Formats</a>
         <a href="#install">Install</a>
+        <a href="#feedback">Feedback</a>
         <a href="https://github.com" target="_blank" class="btn btn-sm btn-outline">GitHub</a>
       </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
@@ -98,6 +99,7 @@
       <a href="#how-it-works">How It Works</a>
       <a href="#formats">Formats</a>
       <a href="#install">Install</a>
+      <a href="#feedback">Feedback</a>
       <a href="https://github.com" target="_blank">GitHub</a>
     </div>
   </nav>
@@ -314,6 +316,42 @@
     </div>
   </section>
 
+  <!-- Feedback -->
+  <section id="feedback" class="feedback">
+    <div class="container">
+      <span class="section-badge">Feedback</span>
+      <h2 class="section-title">Have feedback or a feature request?</h2>
+      <p class="section-subtitle">We'd love to hear from you. Send us your ideas, bug reports, or suggestions.</p>
+
+      <div class="feedback-card">
+        <div class="feedback-form">
+          <div class="form-group">
+            <label for="fb-email">Your Email <span class="form-optional">(optional)</span></label>
+            <input type="email" id="fb-email" class="form-input" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="fb-category">Category</label>
+            <select id="fb-category" class="form-select">
+              <option value="feature">New Feature</option>
+              <option value="improvement">Improvement</option>
+              <option value="bug">Bug Report</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fb-message">Your Message</label>
+            <textarea id="fb-message" class="form-textarea" rows="4" placeholder="Describe your idea or issue..."></textarea>
+          </div>
+          <div id="fb-status" class="fb-status hidden"></div>
+          <button id="btn-send-feedback" class="btn btn-primary btn-send">
+            <i class="fa-solid fa-paper-plane"></i>
+            Send Feedback
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="cta">
     <div class="container">
@@ -340,6 +378,7 @@
         <a href="#features">Features</a>
         <a href="#how-it-works">How It Works</a>
         <a href="#install">Install</a>
+        <a href="#feedback">Feedback</a>
         <a href="https://github.com" target="_blank">GitHub</a>
       </div>
       <p class="footer-copy">v1.0.0 &middot; Open Source &middot; Built for Copilot power users</p>
@@ -360,6 +399,67 @@
         menu.classList.add('hidden');
         toggle.classList.remove('open');
       });
+    });
+
+    // ── Feedback Form (EmailJS) ──────────────────
+    const EMAILJS_SERVICE_ID  = 'service_em2o2a6';
+    const EMAILJS_TEMPLATE_ID = 'template_6595ut4';
+    const EMAILJS_PUBLIC_KEY  = 'R2Yro3gG1FbXS9fJm';
+
+    const btnSend   = document.getElementById('btn-send-feedback');
+    const fbEmail   = document.getElementById('fb-email');
+    const fbCat     = document.getElementById('fb-category');
+    const fbMsg     = document.getElementById('fb-message');
+    const fbStatus  = document.getElementById('fb-status');
+
+    function showFbStatus(text, type) {
+      fbStatus.textContent = text;
+      fbStatus.className = 'fb-status ' + type;
+      fbStatus.classList.remove('hidden');
+    }
+
+    btnSend.addEventListener('click', async () => {
+      const message = fbMsg.value.trim();
+      if (message.length < 10) {
+        showFbStatus('Please enter at least 10 characters.', 'error');
+        return;
+      }
+
+      btnSend.disabled = true;
+      btnSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
+
+      try {
+        const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service_id:  EMAILJS_SERVICE_ID,
+            template_id: EMAILJS_TEMPLATE_ID,
+            user_id:     EMAILJS_PUBLIC_KEY,
+            template_params: {
+              from_email: fbEmail.value.trim() || 'Not provided',
+              category:   fbCat.value,
+              message:    '[Auto Prompt] ' + message,
+              timestamp:  new Date().toISOString(),
+              version:    '1.0.0'
+            }
+          })
+        });
+
+        if (res.ok) {
+          showFbStatus('Thank you! Your feedback has been sent.', 'success');
+          fbEmail.value = '';
+          fbMsg.value = '';
+          fbCat.value = 'feature';
+        } else {
+          throw new Error('Status ' + res.status);
+        }
+      } catch (err) {
+        showFbStatus('Failed to send. Please try again later.', 'error');
+      }
+
+      btnSend.disabled = false;
+      btnSend.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Feedback';
     });
   </script>
 

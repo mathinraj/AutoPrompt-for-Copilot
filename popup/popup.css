@@ -545,6 +545,25 @@ textarea::placeholder {
   background: #dc2626;
 }
 
+/* Feedback Link */
+.feedback-link {
+  margin-top: 12px;
+  text-align: center;
+  padding-top: 10px;
+  border-top: 1px solid #334155;
+}
+
+.feedback-link a {
+  font-size: 12px;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.feedback-link a:hover {
+  color: #2dd4bf;
+}
+
 .hidden {
   display: none !important;
 }

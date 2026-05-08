@@ -1,4 +1,13 @@
 (() => {
+  // --- Platform Detection ---
+  function isGitHubCopilot() {
+    return location.hostname === 'github.com' && location.pathname.startsWith('/copilot');
+  }
+
+  function isMicrosoftCopilot() {
+    return location.hostname === 'copilot.microsoft.com';
+  }
+
   // --- Floating Overlay ---
   let overlay = null;
 
@@ -78,14 +87,16 @@
   });
 
   function diagnosePage() {
-    const info = { url: location.href, title: document.title };
+    const info = { url: location.href, title: document.title, platform: getPlatform() };
 
     const selectors = [
       'textarea', 'input[type="text"]', '[contenteditable="true"]',
       '[aria-label*="Message"]', '[aria-label*="message"]',
       '[aria-label*="Ask"]', '[aria-label*="ask"]',
       '[placeholder]', '[role="textbox"]',
-      '#searchbox', '#user-input',
+      '#searchbox', '#user-input', '#userInput',
+      '#copilot-chat-textarea',
+      '[data-testid="send-button"]',
     ];
 
     info.matches = {};
@@ -99,32 +110,77 @@
           aria: el.getAttribute('aria-label') || null,
           placeholder: el.getAttribute('placeholder') || null,
           role: el.getAttribute('role') || null,
+          contentEditable: el.contentEditable || null,
         }));
       }
     }
 
     const buttons = document.querySelectorAll('button');
-    info.buttons = Array.from(buttons).slice(0, 20).map(b => ({
-      text: (b.textContent || '').trim().slice(0, 40),
+    info.buttons = Array.from(buttons).slice(0, 30).map(b => ({
+      text: (b.textContent || '').trim().slice(0, 60),
       aria: b.getAttribute('aria-label') || null,
+      testid: b.getAttribute('data-testid') || null,
     }));
 
     return info;
   }
 
-  function findInput() {
+  function getPlatform() {
+    if (isGitHubCopilot()) return 'github';
+    if (isMicrosoftCopilot()) return 'microsoft';
+    return 'unknown';
+  }
+
+  // --- Input Detection ---
+
+  function findInputMicrosoft() {
     return document.querySelector('#userInput')
       || document.querySelector('textarea[placeholder*="Message"]')
       || document.querySelector('textarea[role="textbox"]')
       || document.querySelector('textarea');
   }
 
+  function findInputGitHub() {
+    return document.querySelector('#copilot-chat-textarea')
+      || document.querySelector('textarea[placeholder*="Ask Copilot"]')
+      || document.querySelector('textarea[placeholder*="Ask"]')
+      || document.querySelector('textarea[placeholder*="Message"]')
+      || document.querySelector('[role="textbox"][contenteditable="true"]')
+      || document.querySelector('div[contenteditable="true"][data-placeholder]')
+      || document.querySelector('textarea[role="textbox"]')
+      || document.querySelector('textarea');
+  }
+
+  function findInput() {
+    if (isGitHubCopilot()) return findInputGitHub();
+    return findInputMicrosoft();
+  }
+
+  // --- Submit Button Detection (GitHub Copilot) ---
+
+  function findSubmitButtonGitHub() {
+    return document.querySelector('button[data-testid="send-button"]')
+      || document.querySelector('button[aria-label="Send"]')
+      || document.querySelector('button[aria-label="send"]')
+      || document.querySelector('button[aria-label*="Send"]')
+      || document.querySelector('button[type="submit"]');
+  }
+
+  // --- Prompt Execution ---
+
   function sleep(ms) {
     return new Promise(r => setTimeout(r, ms));
   }
 
   async function runPrompt(text) {
-    const input = findInput();
+    if (isGitHubCopilot()) {
+      return runPromptGitHub(text);
+    }
+    return runPromptMicrosoft(text);
+  }
+
+  async function runPromptMicrosoft(text) {
+    const input = findInputMicrosoft();
     if (!input) {
       return { ok: false, error: 'Could not find input element on the page' };
     }
@@ -155,7 +211,81 @@
     }
   }
 
+  async function runPromptGitHub(text) {
+    const input = findInputGitHub();
+    if (!input) {
+      return { ok: false, error: 'Could not find GitHub Copilot input element on the page' };
+    }
+
+    try {
+      input.focus();
+      input.click();
+      await sleep(300);
+
+      const isContentEditable = input.contentEditable === 'true' ||
+                                 input.getAttribute('contenteditable') === 'true';
+      const isTextarea = input.tagName === 'TEXTAREA';
+
+      if (isTextarea) {
+        const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
+        setter.call(input, '');
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(100);
+        setter.call(input, text);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      } else if (isContentEditable) {
+        input.textContent = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(100);
+        input.textContent = text;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      await sleep(500);
+
+      // Try clicking the send button first
+      const sendBtn = findSubmitButtonGitHub();
+      if (sendBtn && !sendBtn.disabled) {
+        sendBtn.click();
+        return { ok: true };
+      }
+
+      // Fallback to Enter key
+      input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
+        bubbles: true, cancelable: true
+      }));
+
+      await sleep(200);
+
+      // If Enter keydown didn't work, try keypress + keyup combo
+      input.dispatchEvent(new KeyboardEvent('keypress', {
+        key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
+        bubbles: true, cancelable: true
+      }));
+      input.dispatchEvent(new KeyboardEvent('keyup', {
+        key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
+        bubbles: true, cancelable: true
+      }));
+
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message };
+    }
+  }
+
+  // --- Response Wait ---
+
   function waitForResponseToFinish() {
+    if (isGitHubCopilot()) {
+      return waitForResponseGitHub();
+    }
+    return waitForResponseMicrosoft();
+  }
+
+  function waitForResponseMicrosoft() {
     return new Promise(resolve => {
       let generating = false;
       let resolved = false;
@@ -189,6 +319,56 @@
       setTimeout(() => {
         if (!generating && !resolved) done();
       }, 10000);
+    });
+  }
+
+  function waitForResponseGitHub() {
+    return new Promise(resolve => {
+      let generating = false;
+      let resolved = false;
+
+      function done() {
+        if (resolved) return;
+        resolved = true;
+        observer.disconnect();
+        resolve();
+      }
+
+      const stopButtonSelectors = [
+        'button[aria-label*="Stop"]',
+        'button[aria-label*="stop"]',
+        'button[data-testid="stop-button"]',
+        'button[aria-label*="Cancel"]',
+        'button[aria-label*="cancel"]',
+      ].join(', ');
+
+      const observer = new MutationObserver(() => {
+        const stopBtn = document.querySelector(stopButtonSelectors);
+
+        // Also check for streaming indicators: a disabled send button often
+        // means the model is still generating
+        const sendBtn = document.querySelector('button[data-testid="send-button"]')
+          || document.querySelector('button[aria-label*="Send"]');
+        const sendDisabled = sendBtn && sendBtn.disabled;
+
+        if (stopBtn || sendDisabled) {
+          generating = true;
+        } else if (generating) {
+          done();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+      });
+
+      setTimeout(done, 90000);
+      setTimeout(() => {
+        if (!generating && !resolved) done();
+      }, 12000);
     });
   }
 })();

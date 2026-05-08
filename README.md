@@ -1,6 +1,6 @@
 # AutoPrompt for Copilot
 
-A Chrome browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com). Run a series of prompts — one after another — without any manual copy-paste.
+A Chrome browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com) and [GitHub Copilot](https://github.com/copilot). Run a series of prompts — one after another — without any manual copy-paste.
 
 ## Features
 
@@ -31,7 +31,7 @@ A Chrome browser extension that automates batch prompting on [Microsoft Copilot]
 
 ## Usage
 
-1. Open [copilot.microsoft.com](https://copilot.microsoft.com) in a tab.
+1. Open [copilot.microsoft.com](https://copilot.microsoft.com) or [github.com/copilot](https://github.com/copilot) in a tab.
 2. Click the **AutoPrompt** extension icon.
 3. Choose **Sample** or **Custom** mode and select/enter your prompts.
 4. Set the desired delay between prompts.
@@ -86,9 +86,28 @@ copilot-batch-search/
 | `storage` | Persist batch state across popup open/close |
 | `tabs` | Find the active Copilot tab to target |
 | `scripting` | Inject the content script if not already loaded |
-| `host_permissions: copilot.microsoft.com` | Interact with the Copilot page DOM |
+| `host_permissions: copilot.microsoft.com, github.com/copilot` | Interact with the Copilot page DOM |
 
 ## Requirements
 
 - Google Chrome (or any Chromium-based browser supporting Manifest V3)
-- An active session on [copilot.microsoft.com](https://copilot.microsoft.com)
+- An active session on [copilot.microsoft.com](https://copilot.microsoft.com) or [github.com/copilot](https://github.com/copilot)
+
+## Changelog
+
+### v1.1.0
+
+- Added **GitHub Copilot** support (`github.com/copilot`) alongside the existing Microsoft Copilot support
+- Platform-aware input detection — automatically adapts to each site's DOM (textarea, contenteditable, or send button)
+- Platform-aware response detection — monitors stop/cancel buttons and disabled send state on GitHub Copilot
+- Extended timeouts for GitHub Copilot (90 s max, 12 s initial) to accommodate longer responses
+- Updated popup tab finder to detect both Copilot platforms
+- Updated landing page, marketing site, and README to reflect dual-platform support
+
+### v1.0.0
+
+- Initial release with Microsoft Copilot (`copilot.microsoft.com`) support
+- Sample and Custom prompt modes
+- File upload support (.txt, .csv, .json)
+- Configurable delay, pause/resume/stop controls
+- Live progress bar and page overlay

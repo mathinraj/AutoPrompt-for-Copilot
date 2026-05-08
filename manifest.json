@@ -1,13 +1,22 @@
 {
   "manifest_version": 3,
   "name": "AutoPrompt for Copilot",
-  "version": "1.0.0",
-  "description": "Automate batch prompts on Microsoft Copilot. Run sample or custom prompts one after another — hands-free. Upload .txt, .csv, or .json files. Pause, resume, and track live progress.",
+  "version": "1.1.0",
+  "description": "Automate batch prompts on Microsoft Copilot & GitHub Copilot. Run sample or custom prompts one after another — hands-free. Upload .txt, .csv, or .json files. Pause, resume, and track live progress.",
   "permissions": ["storage", "tabs", "scripting"],
-  "host_permissions": ["https://copilot.microsoft.com/*"],
+  "host_permissions": [
+    "https://copilot.microsoft.com/*",
+    "https://github.com/copilot*",
+    "https://github.com/copilot/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://copilot.microsoft.com/*"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://github.com/copilot", "https://github.com/copilot/*"],
       "js": ["content/content.js"],
       "run_at": "document_idle"
     }

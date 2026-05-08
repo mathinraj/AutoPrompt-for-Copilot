@@ -261,7 +261,17 @@ $('btn-stop').addEventListener('click', stopBatch);
 
 async function findCopilotTab() {
   const allTabs = await chrome.tabs.query({});
-  return allTabs.find(t => t.url && t.url.includes('copilot.microsoft.com')) || null;
+  return allTabs.find(t => t.url && (
+    t.url.includes('copilot.microsoft.com') ||
+    (t.url.includes('github.com/copilot') && !t.url.includes('github.com/copilot-'))
+  )) || null;
+}
+
+function getCopilotPlatformName(tab) {
+  if (tab && tab.url) {
+    if (tab.url.includes('github.com/copilot')) return 'GitHub Copilot';
+  }
+  return 'Microsoft Copilot';
 }
 
 async function startBatch() {
@@ -276,7 +286,7 @@ async function startBatch() {
 
   const tab = await findCopilotTab();
   if (!tab) {
-    showStatus('Copilot tab not found. Open copilot.microsoft.com in a tab first.', 'error');
+    showStatus('Copilot tab not found. Open copilot.microsoft.com or github.com/copilot in a tab first.', 'error');
     return;
   }
 

@@ -21,12 +21,14 @@ A Chrome browser extension that automates batch prompting on [Microsoft Copilot]
 
 ## Installation
 
-> The extension is not yet published to the Chrome Web Store. Load it as an unpacked extension.
+> The extension is not yet published to the Chrome Web Store. Install manually from the latest release.
 
-1. Clone or download this repository.
+**Download the latest release:** [v1.1.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.1.0)
+
+1. Download and extract the release ZIP from the link above.
 2. Open Chrome and go to `chrome://extensions`.
 3. Enable **Developer mode** (toggle in the top-right corner).
-4. Click **Load unpacked** and select the root folder of this repository.
+4. Click **Load unpacked** and select the extracted folder.
 5. The **AutoPrompt for Copilot** icon will appear in your toolbar.
 
 ## Usage

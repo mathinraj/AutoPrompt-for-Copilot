@@ -1,0 +1,44 @@
+{
+  "categories": [
+    {
+      "name": "General Knowledge",
+      "prompts": [
+        "What are the top 5 AI trends in 2026?",
+        "Explain quantum computing in simple terms",
+        "What is the current state of renewable energy?",
+        "What are the biggest challenges in cybersecurity today?",
+        "How does blockchain technology work?"
+      ]
+    },
+    {
+      "name": "Coding & Technology",
+      "prompts": [
+        "What are best practices for REST API design?",
+        "Explain the difference between SQL and NoSQL databases",
+        "What is the SOLID principle in software engineering?",
+        "Compare React, Vue, and Angular for frontend development",
+        "What are microservices and when should you use them?"
+      ]
+    },
+    {
+      "name": "Science & Research",
+      "prompts": [
+        "Summarize recent breakthroughs in cancer research",
+        "What are the latest developments in space exploration?",
+        "Explain CRISPR gene editing and its potential applications",
+        "What is the current state of fusion energy research?",
+        "How does machine learning work in drug discovery?"
+      ]
+    },
+    {
+      "name": "Business & Productivity",
+      "prompts": [
+        "What are the best project management methodologies?",
+        "How to build a strong company culture in a remote team?",
+        "What are effective strategies for time management?",
+        "Explain the lean startup methodology",
+        "What are the key metrics for a SaaS business?"
+      ]
+    }
+  ]
+}

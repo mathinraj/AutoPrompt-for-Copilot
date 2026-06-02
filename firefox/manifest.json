@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "AutoPrompt for Copilot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Automate batch prompts on Microsoft Copilot, M365 Copilot & GitHub Copilot. Run prompts hands-free with pause, resume & progress.",
   "permissions": [
     "storage",

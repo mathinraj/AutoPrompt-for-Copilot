@@ -1,12 +1,14 @@
 # AutoPrompt for Copilot
 
-A Chrome browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com) and [GitHub Copilot](https://github.com/copilot). Run a series of prompts — one after another — without any manual copy-paste.
+A Chrome & Firefox browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com), [M365 Copilot](https://m365.cloud.microsoft/chat), and [GitHub Copilot](https://github.com/copilot). Run a series of prompts — one after another — without any manual copy-paste.
 
 ## Features
 
-- **Sample Mode** — Pick from built-in prompt categories (General Knowledge, Coding & Technology, Science & Research, Business & Productivity, and more). Select individual prompts via checkboxes.
+- **Three-platform support** — Works on Microsoft Copilot, M365 Copilot, and GitHub Copilot.
+- **Sample Mode** — Pick from built-in prompt categories with 5700+ prompts across General Knowledge, Coding & Technology, Science, Math, and more. Select individual prompts via checkboxes.
 - **Custom Mode** — Paste prompts directly (one per line) or upload a `.txt`, `.csv`, or `.json` file.
-- **Configurable delay** — Choose a wait time between prompts (3 s, 5 s, 10 s, 15 s, or 30 s) to let Copilot finish responding before the next one fires.
+- **Configurable delay** — Choose from 0.1 s to 30 s between prompts, or set a custom delay. Sub-second options for rapid-fire batches.
+- **Jump to prompt** — Start from any prompt number in a batch (e.g., resume from prompt #150).
 - **Pause / Resume / Stop** — Full playback controls so you can intervene mid-batch.
 - **Live progress** — Progress bar, prompt counter, and a live countdown ticker while the batch is running.
 - **Page overlay** — A status overlay on the Copilot tab shows which prompt is active and how long until the next one.
@@ -23,7 +25,7 @@ A Chrome browser extension that automates batch prompting on [Microsoft Copilot]
 
 > The extension is not yet published to the Chrome Web Store. Install manually from the latest release.
 
-**Download the latest release:** [v1.1.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.1.0)
+**Download the latest release:** [v1.2.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.2.0)
 
 1. Download and extract the release ZIP from the link above.
 2. Open Chrome and go to `chrome://extensions`.
@@ -33,7 +35,7 @@ A Chrome browser extension that automates batch prompting on [Microsoft Copilot]
 
 ## Usage
 
-1. Open [copilot.microsoft.com](https://copilot.microsoft.com) or [github.com/copilot](https://github.com/copilot) in a tab.
+1. Open [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), or [github.com/copilot](https://github.com/copilot) in a tab.
 2. Click the **AutoPrompt** extension icon.
 3. Choose **Sample** or **Custom** mode and select/enter your prompts.
 4. Set the desired delay between prompts.
@@ -88,14 +90,23 @@ copilot-batch-search/
 | `storage` | Persist batch state across popup open/close |
 | `tabs` | Find the active Copilot tab to target |
 | `scripting` | Inject the content script if not already loaded |
-| `host_permissions: copilot.microsoft.com, github.com/copilot` | Interact with the Copilot page DOM |
+| `host_permissions: copilot.microsoft.com, m365.cloud.microsoft/chat, github.com/copilot` | Interact with the Copilot page DOM |
 
 ## Requirements
 
-- Google Chrome (or any Chromium-based browser supporting Manifest V3)
-- An active session on [copilot.microsoft.com](https://copilot.microsoft.com) or [github.com/copilot](https://github.com/copilot)
+- Google Chrome (or any Chromium-based browser supporting Manifest V3), or Mozilla Firefox
+- An active session on [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), or [github.com/copilot](https://github.com/copilot)
 
 ## Changelog
+
+### v1.2.0
+
+- Added **M365 Copilot** support (`m365.cloud.microsoft/chat`) — now works on three Copilot platforms
+- **Jump to prompt** — start a batch from any prompt number (e.g., resume from #150)
+- **Sub-second delays** — configurable delay as low as 0.1s; default changed from 5s to 1s
+- **5700+ built-in prompts** — added Math Questions (250), Questions Set 1–5 (1000 each)
+- Firefox extension support with matching feature parity
+- Optimized prompt list rendering for large batches (1000+ prompts)
 
 ### v1.1.0
 

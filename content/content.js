@@ -157,14 +157,15 @@
   }
 
   function findInputM365() {
-    return document.querySelector('#userInput')
+    return document.querySelector('[role="textbox"][contenteditable="true"]')
+      || document.querySelector('div[contenteditable="true"][data-placeholder]')
+      || document.querySelector('#userInput')
       || document.querySelector('textarea[placeholder*="Message"]')
       || document.querySelector('textarea[placeholder*="message"]')
       || document.querySelector('textarea[aria-label*="Message"]')
       || document.querySelector('textarea[aria-label*="Ask"]')
-      || document.querySelector('[role="textbox"][contenteditable="true"]')
-      || document.querySelector('div[contenteditable="true"][data-placeholder]')
       || document.querySelector('textarea[role="textbox"]')
+      || document.querySelector('[contenteditable="true"]')
       || document.querySelector('textarea');
   }
 
@@ -208,6 +209,46 @@
     return runPromptMicrosoft(text);
   }
 
+  function clearContentEditable(el) {
+    el.focus();
+    // Select all content and delete it
+    const sel = window.getSelection();
+    sel.selectAllChildren(el);
+    if (!sel.isCollapsed) {
+      document.execCommand('delete', false, null);
+    }
+    el.innerHTML = '';
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function insertViaExecCommand(el, text) {
+    el.focus();
+    return document.execCommand('insertText', false, text);
+  }
+
+  function insertViaClipboard(el, text) {
+    el.focus();
+    const dt = new DataTransfer();
+    dt.setData('text/plain', text);
+    const pasteEvent = new ClipboardEvent('paste', {
+      bubbles: true,
+      cancelable: true,
+      clipboardData: dt,
+    });
+    el.dispatchEvent(pasteEvent);
+  }
+
+  function insertViaInputEvent(el, text) {
+    el.focus();
+    const ev = new InputEvent('input', {
+      bubbles: true,
+      cancelable: true,
+      inputType: 'insertText',
+      data: text,
+    });
+    el.dispatchEvent(ev);
+  }
+
   async function runPromptM365(text) {
     const input = findInputM365();
     if (!input) {
@@ -223,19 +264,45 @@
                                  input.getAttribute('contenteditable') === 'true';
       const isTextarea = input.tagName === 'TEXTAREA';
 
-      if (isTextarea) {
+      if (isContentEditable) {
+        clearContentEditable(input);
+        await sleep(100);
+
+        // Strategy 1: execCommand (works with most contenteditable frameworks)
+        const inserted = insertViaExecCommand(input, text);
+
+        if (!inserted || !input.textContent.trim()) {
+          // Strategy 2: synthetic clipboard paste
+          insertViaClipboard(input, text);
+          await sleep(100);
+        }
+
+        if (!input.textContent.trim()) {
+          // Strategy 3: InputEvent with insertText type
+          insertViaInputEvent(input, text);
+          await sleep(100);
+        }
+
+        if (!input.textContent.trim()) {
+          // Strategy 4: direct DOM + full event chain
+          input.innerHTML = '';
+          const p = document.createElement('p');
+          p.textContent = text;
+          input.appendChild(p);
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        // Fire additional events to ensure the framework picks up the change
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+      } else if (isTextarea) {
         const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
         setter.call(input, '');
         input.dispatchEvent(new Event('input', { bubbles: true }));
         await sleep(100);
         setter.call(input, text);
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      } else if (isContentEditable) {
-        input.textContent = '';
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        await sleep(100);
-        input.textContent = text;
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
       }
@@ -248,6 +315,7 @@
         return { ok: true };
       }
 
+      // Fallback: try Enter key
       input.dispatchEvent(new KeyboardEvent('keydown', {
         key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
         bubbles: true, cancelable: true

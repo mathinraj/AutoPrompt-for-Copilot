@@ -144,14 +144,15 @@
   }
 
   function findInputM365() {
-    return document.querySelector('#userInput')
+    return document.querySelector('[role="textbox"][contenteditable="true"]')
+      || document.querySelector('div[contenteditable="true"][data-placeholder]')
+      || document.querySelector('#userInput')
       || document.querySelector('textarea[placeholder*="Message"]')
       || document.querySelector('textarea[placeholder*="message"]')
       || document.querySelector('textarea[aria-label*="Message"]')
       || document.querySelector('textarea[aria-label*="Ask"]')
-      || document.querySelector('[role="textbox"][contenteditable="true"]')
-      || document.querySelector('div[contenteditable="true"][data-placeholder]')
       || document.querySelector('textarea[role="textbox"]')
+      || document.querySelector('[contenteditable="true"]')
       || document.querySelector('textarea');
   }
 
@@ -191,6 +192,45 @@
     return runPromptMicrosoft(text);
   }
 
+  function clearContentEditable(el) {
+    el.focus();
+    const sel = window.getSelection();
+    sel.selectAllChildren(el);
+    if (!sel.isCollapsed) {
+      document.execCommand('delete', false, null);
+    }
+    el.innerHTML = '';
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function insertViaExecCommand(el, text) {
+    el.focus();
+    return document.execCommand('insertText', false, text);
+  }
+
+  function insertViaClipboard(el, text) {
+    el.focus();
+    const dt = new DataTransfer();
+    dt.setData('text/plain', text);
+    const pasteEvent = new ClipboardEvent('paste', {
+      bubbles: true,
+      cancelable: true,
+      clipboardData: dt,
+    });
+    el.dispatchEvent(pasteEvent);
+  }
+
+  function insertViaInputEvent(el, text) {
+    el.focus();
+    const ev = new InputEvent('input', {
+      bubbles: true,
+      cancelable: true,
+      inputType: 'insertText',
+      data: text,
+    });
+    el.dispatchEvent(ev);
+  }
+
   async function runPromptM365(text) {
     const input = findInputM365();
     if (!input) {
@@ -206,19 +246,40 @@
                                  input.getAttribute('contenteditable') === 'true';
       const isTextarea = input.tagName === 'TEXTAREA';
 
-      if (isTextarea) {
+      if (isContentEditable) {
+        clearContentEditable(input);
+        await sleep(100);
+
+        const inserted = insertViaExecCommand(input, text);
+
+        if (!inserted || !input.textContent.trim()) {
+          insertViaClipboard(input, text);
+          await sleep(100);
+        }
+
+        if (!input.textContent.trim()) {
+          insertViaInputEvent(input, text);
+          await sleep(100);
+        }
+
+        if (!input.textContent.trim()) {
+          input.innerHTML = '';
+          const p = document.createElement('p');
+          p.textContent = text;
+          input.appendChild(p);
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+      } else if (isTextarea) {
         const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
         setter.call(input, '');
         input.dispatchEvent(new Event('input', { bubbles: true }));
         await sleep(100);
         setter.call(input, text);
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      } else if (isContentEditable) {
-        input.textContent = '';
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        await sleep(100);
-        input.textContent = text;
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
       }

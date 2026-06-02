@@ -148,10 +148,10 @@ $('delay-select').addEventListener('change', (e) => {
 function getDelay() {
   const val = $('delay-select').value;
   if (val === 'custom') {
-    const custom = parseInt($('custom-delay-input').value);
-    return (isNaN(custom) || custom < 1) ? 5 : Math.min(custom, 300);
+    const custom = parseFloat($('custom-delay-input').value);
+    return (isNaN(custom) || custom < 0.1) ? 1 : Math.min(custom, 300);
   }
-  return parseInt(val);
+  return parseFloat(val);
 }
 
 $('btn-save-prompts').addEventListener('click', saveCustomPrompts);

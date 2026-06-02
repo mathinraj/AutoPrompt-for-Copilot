@@ -87,17 +87,13 @@ $('category-select').addEventListener('change', (e) => {
 function renderPromptList(catIndex) {
   const list = $('prompt-list');
   const prompts = sampleData.categories[catIndex].prompts;
-  list.innerHTML = '';
 
-  prompts.forEach((prompt, i) => {
-    const item = document.createElement('div');
-    item.className = 'prompt-item';
-    item.innerHTML = `
-      <input type="checkbox" checked data-index="${i}" class="sample-check">
-      <span title="${prompt}">${prompt}</span>
-    `;
-    list.appendChild(item);
-  });
+  const html = prompts.map((prompt, i) => {
+    const escaped = prompt.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return `<div class="prompt-item"><input type="checkbox" checked data-index="${i}" class="sample-check"><span title="${escaped}">${escaped}</span></div>`;
+  }).join('');
+  list.innerHTML = html;
 
   updateSampleCount();
 }

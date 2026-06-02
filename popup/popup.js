@@ -60,6 +60,7 @@ function switchMode(mode) {
   $(`btn-${mode}`).classList.add('active');
   $('panel-sample').classList.toggle('active', mode === 'sample');
   $('panel-custom').classList.toggle('active', mode === 'custom');
+  updateStartFromMax();
 }
 
 // --- Sample Mode ---
@@ -106,6 +107,7 @@ $('prompt-list').addEventListener('change', updateSampleCount);
 function updateSampleCount() {
   const checked = document.querySelectorAll('.sample-check:checked').length;
   $('sample-count').textContent = checked;
+  updateStartFromMax();
 }
 
 function getSelectedSamplePrompts() {
@@ -141,6 +143,7 @@ $('custom-prompts').addEventListener('input', updateCustomCount);
 function updateCustomCount() {
   const lines = $('custom-prompts').value.split('\n').filter(l => l.trim().length > 0);
   $('custom-count').textContent = lines.length;
+  updateStartFromMax();
 }
 
 function getCustomPrompts() {
@@ -252,6 +255,25 @@ $('saved-prompts-list').addEventListener('click', async (e) => {
   }
 });
 
+// --- Start From ---
+
+function getPromptCount() {
+  if (currentMode === 'sample') {
+    return document.querySelectorAll('.sample-check:checked').length;
+  }
+  return $('custom-prompts').value.split('\n').filter(l => l.trim().length > 0).length;
+}
+
+function updateStartFromMax() {
+  const count = getPromptCount();
+  $('start-from-total').textContent = `/ ${count || '--'}`;
+  const input = $('start-from-input');
+  input.max = count || 1;
+  if (parseInt(input.value) > count && count > 0) {
+    input.value = count;
+  }
+}
+
 // --- Controls ---
 
 $('btn-start').addEventListener('click', startBatch);
@@ -277,12 +299,21 @@ function getCopilotPlatformName(tab) {
 }
 
 async function startBatch() {
-  currentPrompts = currentMode === 'sample'
+  let allPrompts = currentMode === 'sample'
     ? getSelectedSamplePrompts()
     : getCustomPrompts();
 
-  if (currentPrompts.length === 0) {
+  if (allPrompts.length === 0) {
     showStatus('No prompts to run. Add or select prompts first.', 'error');
+    return;
+  }
+
+  const startFrom = parseInt($('start-from-input').value) || 1;
+  const skipCount = Math.max(0, Math.min(startFrom - 1, allPrompts.length - 1));
+  currentPrompts = allPrompts.slice(skipCount);
+
+  if (currentPrompts.length === 0) {
+    showStatus(`Start position ${startFrom} exceeds the number of prompts.`, 'error');
     return;
   }
 
@@ -299,7 +330,10 @@ async function startBatch() {
 
   showRunningUI();
   updateProgress(0, totalPrompts);
-  showStatus('Starting...', 'info');
+  const msg = skipCount > 0
+    ? `Starting from prompt #${startFrom} (${currentPrompts.length} remaining)...`
+    : 'Starting...';
+  showStatus(msg, 'info');
 
   port.postMessage({
     action: 'startBatch',

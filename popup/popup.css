@@ -419,6 +419,51 @@ textarea::placeholder {
   white-space: nowrap;
 }
 
+/* Start From */
+.start-from-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.start-from-row label {
+  margin-bottom: 0;
+  font-size: 12px;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+.start-from-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.start-from-control input[type="number"] {
+  width: 60px;
+  padding: 5px 8px;
+  background: #1e293b;
+  color: #e0e0e0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: center;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.start-from-control input[type="number"]:focus {
+  border-color: #2dd4bf;
+}
+
+.start-from-total {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+}
+
 /* Progress */
 .progress-section {
   margin-top: 14px;

@@ -7,6 +7,10 @@
     return location.hostname === 'copilot.microsoft.com';
   }
 
+  function isM365Copilot() {
+    return location.hostname === 'm365.cloud.microsoft' && location.pathname.startsWith('/chat');
+  }
+
   let overlay = null;
 
   function getOverlay() {
@@ -116,6 +120,7 @@
 
   function getPlatform() {
     if (isGitHubCopilot()) return 'github';
+    if (isM365Copilot()) return 'm365';
     if (isMicrosoftCopilot()) return 'microsoft';
     return 'unknown';
   }
@@ -138,8 +143,21 @@
       || document.querySelector('textarea');
   }
 
+  function findInputM365() {
+    return document.querySelector('#userInput')
+      || document.querySelector('textarea[placeholder*="Message"]')
+      || document.querySelector('textarea[placeholder*="message"]')
+      || document.querySelector('textarea[aria-label*="Message"]')
+      || document.querySelector('textarea[aria-label*="Ask"]')
+      || document.querySelector('[role="textbox"][contenteditable="true"]')
+      || document.querySelector('div[contenteditable="true"][data-placeholder]')
+      || document.querySelector('textarea[role="textbox"]')
+      || document.querySelector('textarea');
+  }
+
   function findInput() {
     if (isGitHubCopilot()) return findInputGitHub();
+    if (isM365Copilot()) return findInputM365();
     return findInputMicrosoft();
   }
 
@@ -155,11 +173,73 @@
     return new Promise(r => setTimeout(r, ms));
   }
 
+  function findSubmitButtonM365() {
+    return document.querySelector('button[data-testid="send-button"]')
+      || document.querySelector('button[aria-label="Send"]')
+      || document.querySelector('button[aria-label="send"]')
+      || document.querySelector('button[aria-label*="Send"]')
+      || document.querySelector('button[type="submit"]');
+  }
+
   async function runPrompt(text) {
     if (isGitHubCopilot()) {
       return runPromptGitHub(text);
     }
+    if (isM365Copilot()) {
+      return runPromptM365(text);
+    }
     return runPromptMicrosoft(text);
+  }
+
+  async function runPromptM365(text) {
+    const input = findInputM365();
+    if (!input) {
+      return { ok: false, error: 'Could not find input element on M365 Copilot page' };
+    }
+
+    try {
+      input.focus();
+      input.click();
+      await sleep(300);
+
+      const isContentEditable = input.contentEditable === 'true' ||
+                                 input.getAttribute('contenteditable') === 'true';
+      const isTextarea = input.tagName === 'TEXTAREA';
+
+      if (isTextarea) {
+        const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
+        setter.call(input, '');
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(100);
+        setter.call(input, text);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      } else if (isContentEditable) {
+        input.textContent = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(100);
+        input.textContent = text;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      await sleep(500);
+
+      const sendBtn = findSubmitButtonM365();
+      if (sendBtn && !sendBtn.disabled) {
+        sendBtn.click();
+        return { ok: true };
+      }
+
+      input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
+        bubbles: true, cancelable: true
+      }));
+
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message };
+    }
   }
 
   async function runPromptMicrosoft(text) {
@@ -260,7 +340,58 @@
     if (isGitHubCopilot()) {
       return waitForResponseGitHub();
     }
+    if (isM365Copilot()) {
+      return waitForResponseM365();
+    }
     return waitForResponseMicrosoft();
+  }
+
+  function waitForResponseM365() {
+    return new Promise(resolve => {
+      let generating = false;
+      let resolved = false;
+
+      function done() {
+        if (resolved) return;
+        resolved = true;
+        observer.disconnect();
+        resolve();
+      }
+
+      const stopButtonSelectors = [
+        'button[aria-label*="Stop"]',
+        'button[aria-label*="stop"]',
+        'button[data-testid="stop-button"]',
+        'button[aria-label*="Cancel"]',
+        'button[aria-label*="cancel"]',
+      ].join(', ');
+
+      const observer = new MutationObserver(() => {
+        const stopBtn = document.querySelector(stopButtonSelectors);
+
+        const sendBtn = document.querySelector('button[data-testid="send-button"]')
+          || document.querySelector('button[aria-label*="Send"]');
+        const sendDisabled = sendBtn && sendBtn.disabled;
+
+        if (stopBtn || sendDisabled) {
+          generating = true;
+        } else if (generating) {
+          done();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+      });
+
+      setTimeout(done, 90000);
+      setTimeout(() => {
+        if (!generating && !resolved) done();
+      }, 12000);
+    });
   }
 
   function waitForResponseMicrosoft() {

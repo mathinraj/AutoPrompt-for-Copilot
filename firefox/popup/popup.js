@@ -251,6 +251,7 @@ async function findCopilotTab() {
   const allTabs = await browser.tabs.query({});
   return allTabs.find(t => t.url && (
     t.url.includes('copilot.microsoft.com') ||
+    t.url.includes('m365.cloud.microsoft/chat') ||
     (t.url.includes('github.com/copilot') && !t.url.includes('github.com/copilot-'))
   )) || null;
 }
@@ -258,6 +259,7 @@ async function findCopilotTab() {
 function getCopilotPlatformName(tab) {
   if (tab && tab.url) {
     if (tab.url.includes('github.com/copilot')) return 'GitHub Copilot';
+    if (tab.url.includes('m365.cloud.microsoft/chat')) return 'M365 Copilot';
   }
   return 'Microsoft Copilot';
 }
@@ -274,7 +276,7 @@ async function startBatch() {
 
   const tab = await findCopilotTab();
   if (!tab) {
-    showStatus('Copilot tab not found. Open copilot.microsoft.com or github.com/copilot in a tab first.', 'error');
+    showStatus('Copilot tab not found. Open copilot.microsoft.com, m365.cloud.microsoft/chat, or github.com/copilot in a tab first.', 'error');
     return;
   }
 

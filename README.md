@@ -23,12 +23,18 @@ A Chrome & Firefox browser extension that automates batch prompting on [Microsof
 
 ## Installation
 
-> The extension is not yet published to the Chrome Web Store. Install manually from the latest release.
+Install from your browser's extension store:
 
-**Download the latest release:** [v1.2.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.2.0)
+| Browser | Link |
+|---------|------|
+| Chrome | [Chrome Web Store](https://chromewebstore.google.com/detail/nkbdadodgidleldhealhlhndjcanhboo) |
+| Firefox | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autoprompt-for-copilot/) |
+| Edge | Coming soon |
+
+Or install manually from the latest release: [v1.2.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.2.0)
 
 1. Download and extract the release ZIP from the link above.
-2. Open Chrome and go to `chrome://extensions`.
+2. Open Chrome/Edge and go to `chrome://extensions`, or Firefox and go to `about:debugging`.
 3. Enable **Developer mode** (toggle in the top-right corner).
 4. Click **Load unpacked** and select the extracted folder.
 5. The **AutoPrompt for Copilot** icon will appear in your toolbar.

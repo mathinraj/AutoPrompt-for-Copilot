@@ -49,8 +49,8 @@
     "description": "A free Chrome extension that automates batch prompts on Microsoft Copilot, M365 Copilot & GitHub Copilot. Run sample or custom prompts one after another, hands-free.",
     "url": "https://auto-prompt-for-copilot.vercel.app/",
     "applicationCategory": "BrowserApplication",
-    "operatingSystem": "Chrome, Chromium",
-    "browserRequirements": "Requires Google Chrome or any Chromium-based browser supporting Manifest V3",
+    "operatingSystem": "Chrome, Firefox, Edge",
+    "browserRequirements": "Requires Google Chrome, Mozilla Firefox, or Microsoft Edge",
     "softwareVersion": "1.2.0",
     "offers": {
       "@type": "Offer",
@@ -112,7 +112,7 @@
     <div class="hero-glow"></div>
     <div class="hero-glow-2"></div>
     <div class="container">
-      <div class="badge">Open Source · Chrome Extension · Manifest V3</div>
+      <div class="badge">Open Source · Chrome · Firefox · Edge (soon)</div>
       <h1>Automate Batch Prompts<br>on <span class="accent">Microsoft Copilot</span>, <span class="accent">M365 Copilot</span> & <span class="accent">GitHub Copilot</span></h1>
       <p class="tagline">Run hundreds of prompts one after another — no copy-paste, no manual work. Works on all three platforms. 5000+ sample prompts included, or bring your own.</p>
       <div class="hero-actions">
@@ -301,28 +301,34 @@
     <div class="container">
       <span class="section-badge">Setup</span>
       <h2 class="section-title">Installation</h2>
-      <p class="section-subtitle">One click install from the Chrome Web Store</p>
+      <p class="section-subtitle">Install from your browser's extension store</p>
 
       <div class="chrome-store-cta">
-        <a href="#" class="chrome-store-btn" onclick="return false;">
+        <a href="https://chromewebstore.google.com/detail/nkbdadodgidleldhealhlhndjcanhboo" target="_blank" class="chrome-store-btn">
           <i class="fa-brands fa-chrome fa-2x chrome-icon"></i>
           <div class="chrome-store-text">
             <span class="chrome-store-label">Available on the</span>
             <span class="chrome-store-name">Chrome Web Store</span>
           </div>
+        </a>
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/autoprompt-for-copilot/" target="_blank" class="chrome-store-btn">
+          <i class="fa-brands fa-firefox-browser fa-2x chrome-icon"></i>
+          <div class="chrome-store-text">
+            <span class="chrome-store-label">Available on</span>
+            <span class="chrome-store-name">Firefox Add-ons</span>
+          </div>
+        </a>
+        <a href="#" class="chrome-store-btn" onclick="return false;">
+          <i class="fa-brands fa-edge fa-2x chrome-icon"></i>
+          <div class="chrome-store-text">
+            <span class="chrome-store-label">Available on the</span>
+            <span class="chrome-store-name">Edge Add-ons</span>
+          </div>
           <span class="coming-soon-tag">Coming Soon</span>
         </a>
-        <p class="install-note">In the meantime, you can install manually from the latest GitHub release.</p>
         <a href="https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.2.0" target="_blank" class="btn btn-outline" style="margin-top: 12px;">
           <i class="fa-brands fa-github"></i> Download v1.2.0 from GitHub
         </a>
-        <ol class="install-steps">
-          <li>Download and extract the release ZIP from GitHub</li>
-          <li>Open Chrome and go to <code>chrome://extensions</code></li>
-          <li>Enable <strong>Developer mode</strong> (toggle in the top-right corner)</li>
-          <li>Click <strong>Load unpacked</strong> and select the extracted folder</li>
-          <li>The <strong>AutoPrompt for Copilot</strong> icon will appear in your toolbar</li>
-        </ol>
       </div>
     </div>
   </section>

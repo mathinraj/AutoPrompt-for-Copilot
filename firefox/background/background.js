@@ -108,6 +108,15 @@ async function ensureContentScript(tid) {
     if (resp && resp.pong) return true;
   } catch {}
 
+  // Last resort: reload the tab so content scripts auto-inject, then retry
+  try {
+    sendToPopup({ action: 'batchError', error: 'Injecting content script — refreshing the Copilot tab...' });
+    await browser.tabs.reload(tid);
+    await new Promise(r => setTimeout(r, 3000));
+    const resp = await browser.tabs.sendMessage(tid, { action: 'ping' });
+    if (resp && resp.pong) return true;
+  } catch {}
+
   return false;
 }
 
@@ -117,7 +126,7 @@ async function startExecution() {
     if (!alive) {
       sendToPopup({
         action: 'batchError',
-        error: 'Content script not ready. Refresh the Copilot tab and try again.'
+        error: 'Content script not ready. Please manually refresh the Copilot tab (Ctrl+R) and click Start again.'
       });
       isRunning = false;
       return;

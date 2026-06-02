@@ -221,18 +221,19 @@
         document.execCommand('selectAll', false, null);
         await sleep(50);
         document.execCommand('delete', false, null);
-        await sleep(150);
+        await sleep(200);
 
-        const inserted = document.execCommand('insertText', false, text);
+        document.execCommand('insertText', false, text);
+        await sleep(300);
 
-        if (!inserted || !input.textContent.trim()) {
-          input.focus();
-          const dt = new DataTransfer();
-          dt.setData('text/plain', text);
-          input.dispatchEvent(new ClipboardEvent('paste', {
-            bubbles: true, cancelable: true, clipboardData: dt,
-          }));
-          await sleep(200);
+        const content = input.textContent || '';
+        if (content.length > text.length * 1.5) {
+          document.execCommand('selectAll', false, null);
+          await sleep(50);
+          document.execCommand('delete', false, null);
+          await sleep(100);
+          document.execCommand('insertText', false, text);
+          await sleep(300);
         }
 
       } else if (isTextarea) {
@@ -245,7 +246,7 @@
         input.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
-      const sendBtn = await waitForSendButton(findSubmitButtonM365, 1500);
+      const sendBtn = await waitForSendButton(findSubmitButtonM365, 3000);
       if (sendBtn) {
         sendBtn.click();
         return { ok: true };

@@ -230,34 +230,33 @@
                                  input.getAttribute('contenteditable') === 'true';
       const isTextarea = input.tagName === 'TEXTAREA';
 
-      // --- Clear existing content ---
       input.focus();
       input.click();
       await sleep(200);
 
       if (isContentEditable) {
-        // Select all and delete via execCommand so the framework tracks the deletion
+        // --- Clear existing content ---
         document.execCommand('selectAll', false, null);
         await sleep(50);
         document.execCommand('delete', false, null);
-        await sleep(150);
+        await sleep(200);
 
-        // --- Insert text via execCommand('insertText') ---
-        // This is the single most reliable way: the browser fires all the
-        // internal InputEvent / beforeinput / input events that React and
-        // Fluent UI listen to. Do NOT manually dispatch input/change events
-        // afterward — that causes duplication.
-        const inserted = document.execCommand('insertText', false, text);
+        // --- Insert text ---
+        // Use execCommand('insertText') which is the only method that
+        // properly updates the Fluent UI framework's internal state.
+        document.execCommand('insertText', false, text);
+        await sleep(300);
 
-        if (!inserted || !input.textContent.trim()) {
-          // Fallback: synthetic clipboard paste
-          input.focus();
-          const dt = new DataTransfer();
-          dt.setData('text/plain', text);
-          input.dispatchEvent(new ClipboardEvent('paste', {
-            bubbles: true, cancelable: true, clipboardData: dt,
-          }));
-          await sleep(200);
+        // The M365 editor sometimes doubles the text. Detect and fix:
+        // select everything and re-insert to replace with single copy.
+        const content = input.textContent || '';
+        if (content.length > text.length * 1.5) {
+          document.execCommand('selectAll', false, null);
+          await sleep(50);
+          document.execCommand('delete', false, null);
+          await sleep(100);
+          document.execCommand('insertText', false, text);
+          await sleep(300);
         }
 
       } else if (isTextarea) {
@@ -271,14 +270,14 @@
       }
 
       // --- Submit ---
-      // Wait up to 1.5s for the send button to become enabled
-      const sendBtn = await waitForSendButton(findSubmitButtonM365, 1500);
+      // Wait up to 3s for the send button to become enabled
+      const sendBtn = await waitForSendButton(findSubmitButtonM365, 3000);
       if (sendBtn) {
         sendBtn.click();
         return { ok: true };
       }
 
-      // Fallback: full Enter key simulation on the input
+      // Fallback: full Enter key simulation
       input.focus();
       const enterOpts = {
         key: 'Enter', code: 'Enter', keyCode: 13, which: 13,

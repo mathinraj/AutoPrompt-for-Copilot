@@ -192,43 +192,14 @@
     return runPromptMicrosoft(text);
   }
 
-  function clearContentEditable(el) {
-    el.focus();
-    const sel = window.getSelection();
-    sel.selectAllChildren(el);
-    if (!sel.isCollapsed) {
-      document.execCommand('delete', false, null);
+  async function waitForSendButton(findFn, timeoutMs) {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const btn = findFn();
+      if (btn && !btn.disabled) return btn;
+      await sleep(100);
     }
-    el.innerHTML = '';
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-
-  function insertViaExecCommand(el, text) {
-    el.focus();
-    return document.execCommand('insertText', false, text);
-  }
-
-  function insertViaClipboard(el, text) {
-    el.focus();
-    const dt = new DataTransfer();
-    dt.setData('text/plain', text);
-    const pasteEvent = new ClipboardEvent('paste', {
-      bubbles: true,
-      cancelable: true,
-      clipboardData: dt,
-    });
-    el.dispatchEvent(pasteEvent);
-  }
-
-  function insertViaInputEvent(el, text) {
-    el.focus();
-    const ev = new InputEvent('input', {
-      bubbles: true,
-      cancelable: true,
-      inputType: 'insertText',
-      data: text,
-    });
-    el.dispatchEvent(ev);
+    return null;
   }
 
   async function runPromptM365(text) {
@@ -238,41 +209,31 @@
     }
 
     try {
-      input.focus();
-      input.click();
-      await sleep(300);
-
       const isContentEditable = input.contentEditable === 'true' ||
                                  input.getAttribute('contenteditable') === 'true';
       const isTextarea = input.tagName === 'TEXTAREA';
 
-      if (isContentEditable) {
-        clearContentEditable(input);
-        await sleep(100);
+      input.focus();
+      input.click();
+      await sleep(200);
 
-        const inserted = insertViaExecCommand(input, text);
+      if (isContentEditable) {
+        document.execCommand('selectAll', false, null);
+        await sleep(50);
+        document.execCommand('delete', false, null);
+        await sleep(150);
+
+        const inserted = document.execCommand('insertText', false, text);
 
         if (!inserted || !input.textContent.trim()) {
-          insertViaClipboard(input, text);
-          await sleep(100);
+          input.focus();
+          const dt = new DataTransfer();
+          dt.setData('text/plain', text);
+          input.dispatchEvent(new ClipboardEvent('paste', {
+            bubbles: true, cancelable: true, clipboardData: dt,
+          }));
+          await sleep(200);
         }
-
-        if (!input.textContent.trim()) {
-          insertViaInputEvent(input, text);
-          await sleep(100);
-        }
-
-        if (!input.textContent.trim()) {
-          input.innerHTML = '';
-          const p = document.createElement('p');
-          p.textContent = text;
-          input.appendChild(p);
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-          input.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
 
       } else if (isTextarea) {
         const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
@@ -284,18 +245,21 @@
         input.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
-      await sleep(500);
-
-      const sendBtn = findSubmitButtonM365();
-      if (sendBtn && !sendBtn.disabled) {
+      const sendBtn = await waitForSendButton(findSubmitButtonM365, 1500);
+      if (sendBtn) {
         sendBtn.click();
         return { ok: true };
       }
 
-      input.dispatchEvent(new KeyboardEvent('keydown', {
+      input.focus();
+      const enterOpts = {
         key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
-        bubbles: true, cancelable: true
-      }));
+        bubbles: true, cancelable: true,
+      };
+      input.dispatchEvent(new KeyboardEvent('keydown', enterOpts));
+      await sleep(50);
+      input.dispatchEvent(new KeyboardEvent('keypress', enterOpts));
+      input.dispatchEvent(new KeyboardEvent('keyup', enterOpts));
 
       return { ok: true };
     } catch (err) {

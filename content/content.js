@@ -209,44 +209,14 @@
     return runPromptMicrosoft(text);
   }
 
-  function clearContentEditable(el) {
-    el.focus();
-    // Select all content and delete it
-    const sel = window.getSelection();
-    sel.selectAllChildren(el);
-    if (!sel.isCollapsed) {
-      document.execCommand('delete', false, null);
+  async function waitForSendButton(findFn, timeoutMs) {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const btn = findFn();
+      if (btn && !btn.disabled) return btn;
+      await sleep(100);
     }
-    el.innerHTML = '';
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-
-  function insertViaExecCommand(el, text) {
-    el.focus();
-    return document.execCommand('insertText', false, text);
-  }
-
-  function insertViaClipboard(el, text) {
-    el.focus();
-    const dt = new DataTransfer();
-    dt.setData('text/plain', text);
-    const pasteEvent = new ClipboardEvent('paste', {
-      bubbles: true,
-      cancelable: true,
-      clipboardData: dt,
-    });
-    el.dispatchEvent(pasteEvent);
-  }
-
-  function insertViaInputEvent(el, text) {
-    el.focus();
-    const ev = new InputEvent('input', {
-      bubbles: true,
-      cancelable: true,
-      inputType: 'insertText',
-      data: text,
-    });
-    el.dispatchEvent(ev);
+    return null;
   }
 
   async function runPromptM365(text) {
@@ -256,46 +226,39 @@
     }
 
     try {
-      input.focus();
-      input.click();
-      await sleep(300);
-
       const isContentEditable = input.contentEditable === 'true' ||
                                  input.getAttribute('contenteditable') === 'true';
       const isTextarea = input.tagName === 'TEXTAREA';
 
-      if (isContentEditable) {
-        clearContentEditable(input);
-        await sleep(100);
+      // --- Clear existing content ---
+      input.focus();
+      input.click();
+      await sleep(200);
 
-        // Strategy 1: execCommand (works with most contenteditable frameworks)
-        const inserted = insertViaExecCommand(input, text);
+      if (isContentEditable) {
+        // Select all and delete via execCommand so the framework tracks the deletion
+        document.execCommand('selectAll', false, null);
+        await sleep(50);
+        document.execCommand('delete', false, null);
+        await sleep(150);
+
+        // --- Insert text via execCommand('insertText') ---
+        // This is the single most reliable way: the browser fires all the
+        // internal InputEvent / beforeinput / input events that React and
+        // Fluent UI listen to. Do NOT manually dispatch input/change events
+        // afterward — that causes duplication.
+        const inserted = document.execCommand('insertText', false, text);
 
         if (!inserted || !input.textContent.trim()) {
-          // Strategy 2: synthetic clipboard paste
-          insertViaClipboard(input, text);
-          await sleep(100);
+          // Fallback: synthetic clipboard paste
+          input.focus();
+          const dt = new DataTransfer();
+          dt.setData('text/plain', text);
+          input.dispatchEvent(new ClipboardEvent('paste', {
+            bubbles: true, cancelable: true, clipboardData: dt,
+          }));
+          await sleep(200);
         }
-
-        if (!input.textContent.trim()) {
-          // Strategy 3: InputEvent with insertText type
-          insertViaInputEvent(input, text);
-          await sleep(100);
-        }
-
-        if (!input.textContent.trim()) {
-          // Strategy 4: direct DOM + full event chain
-          input.innerHTML = '';
-          const p = document.createElement('p');
-          p.textContent = text;
-          input.appendChild(p);
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-          input.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-
-        // Fire additional events to ensure the framework picks up the change
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
 
       } else if (isTextarea) {
         const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
@@ -307,19 +270,24 @@
         input.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
-      await sleep(500);
-
-      const sendBtn = findSubmitButtonM365();
-      if (sendBtn && !sendBtn.disabled) {
+      // --- Submit ---
+      // Wait up to 1.5s for the send button to become enabled
+      const sendBtn = await waitForSendButton(findSubmitButtonM365, 1500);
+      if (sendBtn) {
         sendBtn.click();
         return { ok: true };
       }
 
-      // Fallback: try Enter key
-      input.dispatchEvent(new KeyboardEvent('keydown', {
+      // Fallback: full Enter key simulation on the input
+      input.focus();
+      const enterOpts = {
         key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
-        bubbles: true, cancelable: true
-      }));
+        bubbles: true, cancelable: true,
+      };
+      input.dispatchEvent(new KeyboardEvent('keydown', enterOpts));
+      await sleep(50);
+      input.dispatchEvent(new KeyboardEvent('keypress', enterOpts));
+      input.dispatchEvent(new KeyboardEvent('keyup', enterOpts));
 
       return { ok: true };
     } catch (err) {

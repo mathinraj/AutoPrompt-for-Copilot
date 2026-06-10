@@ -1,10 +1,10 @@
 # AutoPrompt for Copilot
 
-A Chrome & Firefox browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com), [M365 Copilot](https://m365.cloud.microsoft/chat), and [GitHub Copilot](https://github.com/copilot). Run a series of prompts — one after another — without any manual copy-paste.
+A Chrome & Firefox browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com), [M365 Copilot](https://m365.cloud.microsoft/chat), [GitHub Copilot](https://github.com/copilot), and [Teams Copilot](https://teams.microsoft.com). Run a series of prompts — one after another — without any manual copy-paste.
 
 ## Features
 
-- **Three-platform support** — Works on Microsoft Copilot, M365 Copilot, and GitHub Copilot.
+- **Four-platform support** — Works on Microsoft Copilot, M365 Copilot, GitHub Copilot, and Teams Copilot.
 - **Sample Mode** — Pick from built-in prompt categories with 5700+ prompts across General Knowledge, Coding & Technology, Science, Math, and more. Select individual prompts via checkboxes.
 - **Custom Mode** — Paste prompts directly (one per line) or upload a `.txt`, `.csv`, or `.json` file.
 - **Configurable delay** — Choose from 0.1 s to 30 s between prompts, or set a custom delay. Sub-second options for rapid-fire batches.
@@ -31,7 +31,7 @@ Install from your browser's extension store:
 | Firefox | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autoprompt-for-copilot/) |
 | Edge | Coming soon |
 
-Or install manually from the latest release: [v1.2.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.2.0)
+Or install manually from the latest release: [v1.3.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.3.0)
 
 1. Download and extract the release ZIP from the link above.
 2. Open Chrome/Edge and go to `chrome://extensions`, or Firefox and go to `about:debugging`.
@@ -41,7 +41,7 @@ Or install manually from the latest release: [v1.2.0 on GitHub](https://github.c
 
 ## Usage
 
-1. Open [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), or [github.com/copilot](https://github.com/copilot) in a tab.
+1. Open [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), [github.com/copilot](https://github.com/copilot), or [Teams Copilot](https://teams.microsoft.com) in a tab.
 2. Click the **AutoPrompt** extension icon.
 3. Choose **Sample** or **Custom** mode and select/enter your prompts.
 4. Set the desired delay between prompts.
@@ -96,14 +96,22 @@ copilot-batch-search/
 | `storage` | Persist batch state across popup open/close |
 | `tabs` | Find the active Copilot tab to target |
 | `scripting` | Inject the content script if not already loaded |
-| `host_permissions: copilot.microsoft.com, m365.cloud.microsoft/chat, github.com/copilot` | Interact with the Copilot page DOM |
+| `host_permissions: copilot.microsoft.com, m365.cloud.microsoft/chat, github.com/copilot, teams.microsoft.com, outlook.office.com` | Interact with the Copilot page DOM |
 
 ## Requirements
 
 - Google Chrome (or any Chromium-based browser supporting Manifest V3), or Mozilla Firefox
-- An active session on [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), or [github.com/copilot](https://github.com/copilot)
+- An active session on [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), [github.com/copilot](https://github.com/copilot), or [Teams Copilot](https://teams.microsoft.com)
 
 ## Changelog
+
+### v1.3.0
+
+- Added **Teams Copilot** support — now works on four Copilot platforms (Microsoft Copilot, M365 Copilot, GitHub Copilot, and Teams Copilot)
+- Teams Copilot runs on `outlook.office.com` (Microsoft Teams web app); auto-detected via hostname
+- Resilient input detection for Teams' Fluent UI editor (`#m365-chat-editor-target-element`) with retry logic for SPA rendering delays
+- Uses `execCommand('insertText')` for proper Lexical/Fluent UI state management in Teams
+- Updated popup tab finder, platform naming, and error messages for Teams
 
 ### v1.2.0
 

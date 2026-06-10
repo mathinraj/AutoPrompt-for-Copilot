@@ -98,29 +98,62 @@ setInterval(() => {
   }
 }, 1000);
 
-async function ensureContentScript(tid) {
+function waitForTabComplete(tid, timeoutMs = 15000) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (!settled) { settled = true; chrome.tabs.onUpdated.removeListener(listener); resolve(false); }
+    }, timeoutMs);
+    function listener(updatedId, info) {
+      if (updatedId === tid && info.status === 'complete' && !settled) {
+        settled = true;
+        clearTimeout(timer);
+        chrome.tabs.onUpdated.removeListener(listener);
+        resolve(true);
+      }
+    }
+    chrome.tabs.onUpdated.addListener(listener);
+  });
+}
+
+async function pingTab(tid) {
   try {
     const resp = await chrome.tabs.sendMessage(tid, { action: 'ping' });
     if (resp && resp.pong) return true;
   } catch {}
+  return false;
+}
 
+async function ensureContentScript(tid) {
+  if (await pingTab(tid)) return true;
+
+  // Try programmatic injection
   try {
     await chrome.scripting.executeScript({
       target: { tabId: tid },
       files: ['content/content.js']
     });
     await new Promise(r => setTimeout(r, 500));
-    const resp = await chrome.tabs.sendMessage(tid, { action: 'ping' });
-    if (resp && resp.pong) return true;
+    if (await pingTab(tid)) return true;
   } catch {}
 
-  // Last resort: reload the tab so content scripts auto-inject, then retry
+  // Last resort: reload the tab, wait for it to fully load, then retry with backoff
   try {
     sendToPopup({ action: 'batchError', error: 'Injecting content script — refreshing the Copilot tab...' });
     await chrome.tabs.reload(tid);
-    await new Promise(r => setTimeout(r, 3000));
-    const resp = await chrome.tabs.sendMessage(tid, { action: 'ping' });
-    if (resp && resp.pong) return true;
+    await waitForTabComplete(tid, 15000);
+    await new Promise(r => setTimeout(r, 1500));
+    if (await pingTab(tid)) return true;
+
+    // Retry injection after reload in case manifest content_scripts didn't fire
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tid },
+        files: ['content/content.js']
+      });
+      await new Promise(r => setTimeout(r, 500));
+      if (await pingTab(tid)) return true;
+    } catch {}
   } catch {}
 
   return false;

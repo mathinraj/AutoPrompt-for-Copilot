@@ -11,6 +11,11 @@
     return location.hostname === 'm365.cloud.microsoft' && location.pathname.startsWith('/chat');
   }
 
+  function isTeamsCopilot() {
+    return location.hostname === 'teams.microsoft.com'
+      || location.hostname === 'outlook.office.com';
+  }
+
   let overlay = null;
 
   function getOverlay() {
@@ -120,6 +125,7 @@
 
   function getPlatform() {
     if (isGitHubCopilot()) return 'github';
+    if (isTeamsCopilot()) return 'teams';
     if (isM365Copilot()) return 'm365';
     if (isMicrosoftCopilot()) return 'microsoft';
     return 'unknown';
@@ -156,8 +162,17 @@
       || document.querySelector('textarea');
   }
 
+  function findInputTeams() {
+    return document.querySelector('#m365-chat-editor-target-element')
+      || document.querySelector('span[role="textbox"][contenteditable="true"][aria-label*="Message Copilot"]')
+      || document.querySelector('[role="textbox"][contenteditable="true"][aria-label*="Message"]')
+      || document.querySelector('[role="textbox"][contenteditable="true"]')
+      || document.querySelector('[contenteditable="true"]');
+  }
+
   function findInput() {
     if (isGitHubCopilot()) return findInputGitHub();
+    if (isTeamsCopilot()) return findInputTeams();
     if (isM365Copilot()) return findInputM365();
     return findInputMicrosoft();
   }
@@ -182,9 +197,20 @@
       || document.querySelector('button[type="submit"]');
   }
 
+  function findSubmitButtonTeams() {
+    return document.querySelector('button.fai-SendButton')
+      || document.querySelector('button[aria-label="Send"][type="submit"]')
+      || document.querySelector('button[aria-label="Send"]')
+      || document.querySelector('button[aria-label*="Send"]')
+      || document.querySelector('button[type="submit"]');
+  }
+
   async function runPrompt(text) {
     if (isGitHubCopilot()) {
       return runPromptGitHub(text);
+    }
+    if (isTeamsCopilot()) {
+      return runPromptTeams(text);
     }
     if (isM365Copilot()) {
       return runPromptM365(text);
@@ -247,6 +273,79 @@
       }
 
       const sendBtn = await waitForSendButton(findSubmitButtonM365, 3000);
+      if (sendBtn) {
+        sendBtn.click();
+        return { ok: true };
+      }
+
+      input.focus();
+      const enterOpts = {
+        key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
+        bubbles: true, cancelable: true,
+      };
+      input.dispatchEvent(new KeyboardEvent('keydown', enterOpts));
+      await sleep(50);
+      input.dispatchEvent(new KeyboardEvent('keypress', enterOpts));
+      input.dispatchEvent(new KeyboardEvent('keyup', enterOpts));
+
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message };
+    }
+  }
+
+  async function runPromptTeams(text) {
+    let input = findInputTeams();
+    if (!input) {
+      for (let i = 0; i < 15; i++) {
+        await sleep(500);
+        input = findInputTeams();
+        if (input) break;
+      }
+    }
+    if (!input) {
+      return { ok: false, error: 'Could not find input element on Teams Copilot page' };
+    }
+
+    try {
+      const isContentEditable = input.contentEditable === 'true' ||
+                                 input.getAttribute('contenteditable') === 'true';
+      const isTextarea = input.tagName === 'TEXTAREA';
+
+      input.focus();
+      input.click();
+      await sleep(200);
+
+      if (isContentEditable) {
+        document.execCommand('selectAll', false, null);
+        await sleep(50);
+        document.execCommand('delete', false, null);
+        await sleep(200);
+
+        document.execCommand('insertText', false, text);
+        await sleep(300);
+
+        const content = input.textContent || '';
+        if (content.length > text.length * 1.5) {
+          document.execCommand('selectAll', false, null);
+          await sleep(50);
+          document.execCommand('delete', false, null);
+          await sleep(100);
+          document.execCommand('insertText', false, text);
+          await sleep(300);
+        }
+
+      } else if (isTextarea) {
+        const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
+        setter.call(input, '');
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(100);
+        setter.call(input, text);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      const sendBtn = await waitForSendButton(findSubmitButtonTeams, 3000);
       if (sendBtn) {
         sendBtn.click();
         return { ok: true };
@@ -366,10 +465,61 @@
     if (isGitHubCopilot()) {
       return waitForResponseGitHub();
     }
+    if (isTeamsCopilot()) {
+      return waitForResponseTeams();
+    }
     if (isM365Copilot()) {
       return waitForResponseM365();
     }
     return waitForResponseMicrosoft();
+  }
+
+  function waitForResponseTeams() {
+    return new Promise(resolve => {
+      let generating = false;
+      let resolved = false;
+
+      function done() {
+        if (resolved) return;
+        resolved = true;
+        observer.disconnect();
+        resolve();
+      }
+
+      const stopButtonSelectors = [
+        'button[aria-label*="Stop"]',
+        'button[aria-label*="stop"]',
+        'button[data-testid="stop-button"]',
+        'button[aria-label*="Cancel"]',
+        'button[aria-label*="cancel"]',
+      ].join(', ');
+
+      const observer = new MutationObserver(() => {
+        const stopBtn = document.querySelector(stopButtonSelectors);
+
+        const sendBtn = document.querySelector('button[data-testid="send-button"]')
+          || document.querySelector('button[aria-label*="Send"]');
+        const sendDisabled = sendBtn && sendBtn.disabled;
+
+        if (stopBtn || sendDisabled) {
+          generating = true;
+        } else if (generating) {
+          done();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+      });
+
+      setTimeout(done, 90000);
+      setTimeout(() => {
+        if (!generating && !resolved) done();
+      }, 12000);
+    });
   }
 
   function waitForResponseM365() {

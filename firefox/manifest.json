@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "AutoPrompt for Copilot",
   "version": "1.2.0",
-  "description": "Automate batch prompts on Microsoft Copilot, M365 Copilot & GitHub Copilot. Run prompts hands-free with pause, resume & progress.",
+  "description": "Automate batch prompts on Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot. Run prompts hands-free with pause, resume & progress.",
   "permissions": [
     "storage",
     "tabs",
@@ -10,7 +10,9 @@
     "https://m365.cloud.microsoft/chat*",
     "https://m365.cloud.microsoft/chat/*",
     "https://github.com/copilot*",
-    "https://github.com/copilot/*"
+    "https://github.com/copilot/*",
+    "https://teams.microsoft.com/*",
+    "https://outlook.office.com/*"
   ],
   "content_scripts": [
     {
@@ -25,6 +27,16 @@
     },
     {
       "matches": ["https://github.com/copilot", "https://github.com/copilot/*"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://teams.microsoft.com/*"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://outlook.office.com/*"],
       "js": ["content/content.js"],
       "run_at": "document_idle"
     }

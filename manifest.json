@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AutoPrompt for Copilot",
   "version": "1.3.0",
-  "description": "Automate batch prompts on Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot. Run prompts hands-free with pause, resume & progress.",
+  "description": "Automate batch prompts on Microsoft Copilot, M365, GitHub & Teams Copilot. Hands-free with pause & progress.",
   "permissions": ["storage", "tabs", "scripting"],
   "host_permissions": [
     "https://copilot.microsoft.com/*",

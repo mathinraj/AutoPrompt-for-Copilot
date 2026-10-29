@@ -1,6 +1,6 @@
 # AutoPrompt for Copilot
 
-A Chrome & Firefox browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com), [M365 Copilot](https://m365.cloud.microsoft/chat), [GitHub Copilot](https://github.com/copilot), and [Teams Copilot](https://teams.microsoft.com). Run a series of prompts — one after another — without any manual copy-paste.
+A Chrome & Firefox browser extension that automates batch prompting on [Microsoft Copilot](https://copilot.microsoft.com), [M365 Copilot](https://m365.cloud.microsoft/chat) (including [copilot.cloud.microsoft](https://copilot.cloud.microsoft/chat)), [GitHub Copilot](https://github.com/copilot), and [Teams Copilot](https://teams.microsoft.com). Run a series of prompts — one after another — without any manual copy-paste.
 
 ## Features
 
@@ -31,7 +31,7 @@ Install from your browser's extension store:
 | Firefox | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autoprompt-for-copilot/) |
 | Edge | Coming soon |
 
-Or install manually from the latest release: [v1.3.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.3.0)
+Or install manually from the latest release: [v1.4.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.4.0)
 
 1. Download and extract the release ZIP from the link above.
 2. Open Chrome/Edge and go to `chrome://extensions`, or Firefox and go to `about:debugging`.
@@ -104,6 +104,13 @@ copilot-batch-search/
 - An active session on [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), [copilot.cloud.microsoft](https://copilot.cloud.microsoft/chat), [github.com/copilot](https://github.com/copilot), or [Teams Copilot](https://teams.microsoft.com)
 
 ## Changelog
+
+### v1.4.0
+
+- Added support for **Microsoft 365 Copilot Chat** on the new `copilot.cloud.microsoft` domain (e.g. `copilot.cloud.microsoft/chat`)
+- Handled as M365 Copilot — reuses the same input, send-button, and response detection as `m365.cloud.microsoft/chat`
+- Added `copilot.cloud.microsoft` to host permissions and content script matches (Chrome and Firefox)
+- Updated popup tab finder, platform naming, and "Copilot tab not found" error message to include the new domain
 
 ### v1.3.0
 

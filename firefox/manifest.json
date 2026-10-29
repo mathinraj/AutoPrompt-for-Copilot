@@ -59,7 +59,7 @@
     "scripts": ["background/background.js"]
   },
   "web_accessible_resources": [
-    "data/sample-prompts.json",
+    "data/prompts/*.json",
     "landing/landing.html",
     "landing/landing.css"
   ],

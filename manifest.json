@@ -59,7 +59,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["data/sample-prompts.json", "landing/landing.html", "landing/landing.css"],
+      "resources": ["data/prompts/*.json", "landing/landing.html", "landing/landing.css"],
       "matches": ["<all_urls>"]
     }
   ],

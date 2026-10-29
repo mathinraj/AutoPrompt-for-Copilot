@@ -67,7 +67,9 @@ copilot-batch-search/
 │   ├── popup.css              # Popup styles
 │   └── parser.js              # File parser for .txt / .csv / .json prompt files
 ├── data/
-│   └── sample-prompts.json    # Built-in prompt categories
+│   └── prompts/
+│       ├── index.json         # Built-in category list (name, file, count)
+│       └── *.json             # One file per category, loaded on selection
 ├── icons/
 │   ├── icon16.png
 │   ├── icon48.png
@@ -111,6 +113,7 @@ copilot-batch-search/
 - Handled as M365 Copilot — reuses the same input, send-button, and response detection as `m365.cloud.microsoft/chat`
 - Added `copilot.cloud.microsoft` to host permissions and content script matches (Chrome and Firefox)
 - Updated popup tab finder, platform naming, and "Copilot tab not found" error message to include the new domain
+- Built-in prompts are now split into one file per category; the popup loads only the selected category instead of all 5,800+ prompts on open
 
 ### v1.3.0
 

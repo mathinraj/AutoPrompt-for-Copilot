@@ -1,0 +1,10 @@
+{
+  "name": "Science & Research",
+  "prompts": [
+    "Summarize recent breakthroughs in cancer research",
+    "What are the latest developments in space exploration?",
+    "Explain CRISPR gene editing and its potential applications",
+    "What is the current state of fusion energy research?",
+    "How does machine learning work in drug discovery?"
+  ]
+}

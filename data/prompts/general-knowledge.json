@@ -1,0 +1,10 @@
+{
+  "name": "General Knowledge",
+  "prompts": [
+    "What are the top 5 AI trends in 2026?",
+    "Explain quantum computing in simple terms",
+    "What is the current state of renewable energy?",
+    "What are the biggest challenges in cybersecurity today?",
+    "How does blockchain technology work?"
+  ]
+}

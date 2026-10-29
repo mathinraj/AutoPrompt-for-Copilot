@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {
+      "name": "General Knowledge",
+      "file": "general-knowledge.json",
+      "count": 5
+    },
+    {
+      "name": "Coding & Technology",
+      "file": "coding-technology.json",
+      "count": 5
+    },
+    {
+      "name": "Science & Research",
+      "file": "science-research.json",
+      "count": 5
+    },
+    {
+      "name": "Business & Productivity",
+      "file": "business-productivity.json",
+      "count": 5
+    },
+    {
+      "name": "Math Questions (250)",
+      "file": "math-questions-250.json",
+      "count": 250
+    },
+    {
+      "name": "Math Questions (500)",
+      "file": "math-questions-500.json",
+      "count": 500
+    },
+    {
+      "name": "Questions Set 1 (1000)",
+      "file": "questions-set-1-1000.json",
+      "count": 1000
+    },
+    {
+      "name": "Questions Set 2 (1000)",
+      "file": "questions-set-2-1000.json",
+      "count": 1000
+    },
+    {
+      "name": "Questions Set 3 (1000)",
+      "file": "questions-set-3-1000.json",
+      "count": 1000
+    },
+    {
+      "name": "Questions Set 4 (1000)",
+      "file": "questions-set-4-1000.json",
+      "count": 1000
+    },
+    {
+      "name": "Questions Set 5 (1000)",
+      "file": "questions-set-5-1000.json",
+      "count": 1000
+    }
+  ]
+}

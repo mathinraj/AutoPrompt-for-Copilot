@@ -1,5 +1,8 @@
 let currentMode = 'sample';
-let sampleData = null;
+let sampleCategories = [];
+let currentCategoryPrompts = [];
+let categoryRequestId = 0;
+const categoryCache = {};
 let currentPrompts = [];
 let isRunning = false;
 let isPaused = false;
@@ -59,27 +62,68 @@ function switchMode(mode) {
 }
 
 async function loadSamplePrompts() {
-  const res = await fetch(browser.runtime.getURL('data/sample-prompts.json'));
-  sampleData = await res.json();
+  try {
+    const res = await fetch(browser.runtime.getURL('data/prompts/index.json'));
+    sampleCategories = (await res.json()).categories;
+  } catch (err) {
+    showStatus(`Failed to load prompt categories: ${err.message}`, 'error');
+    return;
+  }
 
   const select = $('category-select');
-  sampleData.categories.forEach((cat, i) => {
+  sampleCategories.forEach((cat, i) => {
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = cat.name;
     select.appendChild(opt);
   });
 
-  renderPromptList(0);
+  selectCategory(0);
 }
 
 $('category-select').addEventListener('change', (e) => {
-  renderPromptList(parseInt(e.target.value));
+  selectCategory(parseInt(e.target.value));
 });
 
-function renderPromptList(catIndex) {
+function fetchCategoryPrompts(catIndex) {
+  if (!categoryCache[catIndex]) {
+    const url = browser.runtime.getURL(`data/prompts/${sampleCategories[catIndex].file}`);
+    categoryCache[catIndex] = fetch(url)
+      .then(res => res.json())
+      .then(data => data.prompts)
+      .catch(err => {
+        delete categoryCache[catIndex];
+        throw err;
+      });
+  }
+  return categoryCache[catIndex];
+}
+
+async function selectCategory(catIndex) {
+  const requestId = ++categoryRequestId;
+  currentCategoryPrompts = [];
+  $('prompt-list').innerHTML = '<div class="prompt-item">Loading prompts...</div>';
+  updateSampleCount();
+
+  let prompts;
+  try {
+    prompts = await fetchCategoryPrompts(catIndex);
+  } catch (err) {
+    if (requestId === categoryRequestId) {
+      $('prompt-list').innerHTML = '';
+      showStatus(`Failed to load prompts: ${err.message}`, 'error');
+    }
+    return;
+  }
+
+  // A newer selection may have been made while this one was loading.
+  if (requestId !== categoryRequestId) return;
+  currentCategoryPrompts = prompts;
+  renderPromptList(prompts);
+}
+
+function renderPromptList(prompts) {
   const list = $('prompt-list');
-  const prompts = sampleData.categories[catIndex].prompts;
 
   const html = prompts.map((prompt, i) => {
     const escaped = prompt.replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -100,10 +144,8 @@ function updateSampleCount() {
 }
 
 function getSelectedSamplePrompts() {
-  const catIndex = parseInt($('category-select').value);
-  const prompts = sampleData.categories[catIndex].prompts;
   const checked = document.querySelectorAll('.sample-check:checked');
-  return Array.from(checked).map(cb => prompts[parseInt(cb.dataset.index)]);
+  return Array.from(checked).map(cb => currentCategoryPrompts[parseInt(cb.dataset.index)]);
 }
 
 $('file-input').addEventListener('change', (e) => {

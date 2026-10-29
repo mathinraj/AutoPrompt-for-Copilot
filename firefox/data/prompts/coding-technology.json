@@ -1,0 +1,10 @@
+{
+  "name": "Coding & Technology",
+  "prompts": [
+    "What are best practices for REST API design?",
+    "Explain the difference between SQL and NoSQL databases",
+    "What is the SOLID principle in software engineering?",
+    "Compare React, Vue, and Angular for frontend development",
+    "What are microservices and when should you use them?"
+  ]
+}

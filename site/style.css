@@ -820,39 +820,6 @@ code {
   color: #f87171;
 }
 
-/* ========== CTA ========== */
-.cta {
-  padding: 80px 24px;
-  text-align: center;
-}
-
-.cta-card {
-  background: linear-gradient(135deg, #0c1a24 0%, #0c1120 100%);
-  border: 1px solid #1e293b;
-  border-radius: 24px;
-  padding: 64px 40px;
-}
-
-.cta h2 {
-  font-size: 32px;
-  font-weight: 800;
-  color: #f1f5f9;
-  margin-bottom: 12px;
-}
-
-.cta p {
-  font-size: 17px;
-  color: #7a8599;
-  margin-bottom: 36px;
-}
-
-.cta-actions {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
 /* ========== Footer ========== */
 .footer {
   padding: 32px 24px;
@@ -961,14 +928,6 @@ code {
     flex: auto;
     width: 100%;
     max-width: 280px;
-  }
-
-  .cta-card {
-    padding: 40px 24px;
-  }
-
-  .cta h2 {
-    font-size: 26px;
   }
 }
 

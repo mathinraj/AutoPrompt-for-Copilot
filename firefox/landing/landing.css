@@ -56,17 +56,6 @@ code {
   transform: translateY(-1px);
 }
 
-.btn-outline {
-  background: transparent;
-  color: #2dd4bf;
-  border: 1.5px solid #2dd4bf;
-}
-
-.btn-outline:hover {
-  background: rgba(45, 212, 191, 0.1);
-  transform: translateY(-1px);
-}
-
 .btn-lg {
   padding: 14px 36px;
   font-size: 16px;
@@ -126,15 +115,8 @@ code {
   font-size: 18px;
   color: #94a3b8;
   max-width: 560px;
-  margin: 0 auto 36px;
+  margin: 0 auto;
   line-height: 1.6;
-}
-
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
 }
 
 /* ========== Section Common ========== */
@@ -339,6 +321,19 @@ code {
   margin-right: auto;
 }
 
+.cta-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-actions .btn {
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* ========== Footer ========== */
 .footer {
   padding: 32px 24px;
@@ -366,7 +361,8 @@ code {
   }
 
   .features-grid,
-  .formats-grid {
+  .formats-grid,
+  .cta-actions {
     grid-template-columns: 1fr;
   }
 }

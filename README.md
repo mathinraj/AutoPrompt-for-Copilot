@@ -31,7 +31,7 @@ Install from your browser's extension store:
 | Firefox | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autoprompt-for-copilot/) |
 | Edge | Coming soon |
 
-Or install manually from the latest release: [v1.4.0 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.4.0)
+Or install manually from the latest release: [v1.4.5 on GitHub](https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/tag/V1.4.5)
 
 1. Download and extract the release ZIP from the link above.
 2. Open Chrome/Edge and go to `chrome://extensions`, or Firefox and go to `about:debugging`.
@@ -107,14 +107,19 @@ copilot-batch-search/
 
 ## Changelog
 
+### v1.4.5
+
+- **Faster popup:** built-in prompts are now split into one file per category (`data/prompts/`); the popup loads a small category index on open and fetches only the selected category, instead of parsing all 5,800+ prompts every time
+- Loaded categories are cached for the rest of the popup session, so switching back is instant
+- Shows a "Loading prompts..." placeholder while a category loads, and an error message (with retry on next selection) if it fails
+- Quickly switching categories no longer risks showing a stale list from an earlier selection
+
 ### v1.4.0
 
 - Added support for **Microsoft 365 Copilot Chat** on the new `copilot.cloud.microsoft` domain (e.g. `copilot.cloud.microsoft/chat`)
 - Handled as M365 Copilot — reuses the same input, send-button, and response detection as `m365.cloud.microsoft/chat`
 - Added `copilot.cloud.microsoft` to host permissions and content script matches (Chrome and Firefox)
 - Updated popup tab finder, platform naming, and "Copilot tab not found" error message to include the new domain
-- Built-in prompts are now split into one file per category; the popup loads only the selected category instead of all 5,800+ prompts on open
-
 ### v1.3.0
 
 - Added **Teams Copilot** support — now works on four Copilot platforms (Microsoft Copilot, M365 Copilot, GitHub Copilot, and Teams Copilot)

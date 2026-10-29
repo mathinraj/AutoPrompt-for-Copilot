@@ -8,6 +8,7 @@
     "https://copilot.microsoft.com/*",
     "https://m365.cloud.microsoft/chat*",
     "https://m365.cloud.microsoft/chat/*",
+    "https://copilot.cloud.microsoft/*",
     "https://github.com/copilot*",
     "https://github.com/copilot/*",
     "https://teams.microsoft.com/*",
@@ -21,6 +22,11 @@
     },
     {
       "matches": ["https://m365.cloud.microsoft/chat", "https://m365.cloud.microsoft/chat/*"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://copilot.cloud.microsoft/*"],
       "js": ["content/content.js"],
       "run_at": "document_idle"
     },

@@ -41,7 +41,7 @@ Or install manually from the latest release: [v1.3.0 on GitHub](https://github.c
 
 ## Usage
 
-1. Open [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), [github.com/copilot](https://github.com/copilot), or [Teams Copilot](https://teams.microsoft.com) in a tab.
+1. Open [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), [copilot.cloud.microsoft](https://copilot.cloud.microsoft/chat), [github.com/copilot](https://github.com/copilot), or [Teams Copilot](https://teams.microsoft.com) in a tab.
 2. Click the **AutoPrompt** extension icon.
 3. Choose **Sample** or **Custom** mode and select/enter your prompts.
 4. Set the desired delay between prompts.
@@ -96,12 +96,12 @@ copilot-batch-search/
 | `storage` | Persist batch state across popup open/close |
 | `tabs` | Find the active Copilot tab to target |
 | `scripting` | Inject the content script if not already loaded |
-| `host_permissions: copilot.microsoft.com, m365.cloud.microsoft/chat, github.com/copilot, teams.microsoft.com, outlook.office.com` | Interact with the Copilot page DOM |
+| `host_permissions: copilot.microsoft.com, m365.cloud.microsoft/chat, copilot.cloud.microsoft, github.com/copilot, teams.microsoft.com, outlook.office.com` | Interact with the Copilot page DOM |
 
 ## Requirements
 
 - Google Chrome (or any Chromium-based browser supporting Manifest V3), or Mozilla Firefox
-- An active session on [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), [github.com/copilot](https://github.com/copilot), or [Teams Copilot](https://teams.microsoft.com)
+- An active session on [copilot.microsoft.com](https://copilot.microsoft.com), [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat), [copilot.cloud.microsoft](https://copilot.cloud.microsoft/chat), [github.com/copilot](https://github.com/copilot), or [Teams Copilot](https://teams.microsoft.com)
 
 ## Changelog
 

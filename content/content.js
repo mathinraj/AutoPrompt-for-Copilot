@@ -9,7 +9,8 @@
   }
 
   function isM365Copilot() {
-    return location.hostname === 'm365.cloud.microsoft' && location.pathname.startsWith('/chat');
+    return (location.hostname === 'm365.cloud.microsoft' && location.pathname.startsWith('/chat'))
+      || location.hostname === 'copilot.cloud.microsoft';
   }
 
   function isTeamsCopilot() {

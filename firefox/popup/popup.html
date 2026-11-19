@@ -12,6 +12,15 @@
       <h1>AutoPrompt for Copilot</h1>
     </header>
 
+    <div id="update-banner" class="update-banner hidden">
+      <div class="update-body">
+        <span id="update-text" class="update-text"></span>
+        <span class="update-hint">Store updates can take a few days to arrive. <a id="update-notes" target="_blank" rel="noopener noreferrer">What's new</a></span>
+      </div>
+      <a id="update-link" class="update-link" target="_blank" rel="noopener noreferrer">Update</a>
+      <button id="update-dismiss" class="update-dismiss" title="Dismiss">✕</button>
+    </div>
+
     <div class="mode-toggle">
       <button id="btn-sample" class="mode-btn active" data-mode="sample">Sample</button>
       <button id="btn-custom" class="mode-btn" data-mode="custom">Custom</button>
@@ -122,5 +131,6 @@
 
   <script src="parser.js"></script>
   <script src="popup.js"></script>
+  <script src="update-check.js"></script>
 </body>
 </html>

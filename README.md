@@ -65,7 +65,8 @@ copilot-batch-search/
 │   ├── popup.html             # Extension popup UI
 │   ├── popup.js               # Popup logic (mode switching, controls, progress)
 │   ├── popup.css              # Popup styles
-│   └── parser.js              # File parser for .txt / .csv / .json prompt files
+│   ├── parser.js              # File parser for .txt / .csv / .json prompt files
+│   └── update-check.js        # Shows a banner when a newer GitHub release exists
 ├── data/
 │   └── prompts/
 │       ├── index.json         # Built-in category list (name, file, count)
@@ -100,6 +101,21 @@ copilot-batch-search/
 | `scripting` | Inject the content script if not already loaded |
 | `host_permissions: copilot.microsoft.com, m365.cloud.microsoft/chat, copilot.cloud.microsoft, github.com/copilot, teams.microsoft.com, outlook.office.com` | Interact with the Copilot page DOM |
 
+The popup also calls the public GitHub API (`api.github.com/repos/mathinraj/AutoPrompt-for-Copilot/releases/latest`) at most once a day to check for updates. No user data is sent, and no extra permission is needed because the GitHub API allows cross-origin requests.
+
+## Update Notifications
+
+When the popup opens, `popup/update-check.js` reads the latest published GitHub release (drafts and pre-releases are ignored) and compares its tag (`v1.4.5`, `V1.4.5`, or `1.4.5`) with the installed version. If the release is newer, the popup shows a banner with an **Update** link to the browser's store page and a **What's new** link to the release notes. Users can dismiss the banner; it reappears only for a later version.
+
+- **Store review delay:** GitHub releases are published as soon as the build is submitted to the stores, but store review takes time. The banner therefore stays hidden until the release is **24 hours old** (`RELEASE_GRACE_MS`), and it reminds users that store updates can take a few days to arrive.
+- **Caching:** the result is cached for 24 hours (`CHECK_INTERVAL_MS`). A failed check (offline, or GitHub's 60-requests-per-hour anonymous limit) falls back to the last cached result without blocking the popup.
+
+**Releasing a new version:**
+
+1. Bump `version` in `manifest.json` and `firefox/manifest.json`, then run `./package.sh`.
+2. Upload the zips to the Chrome Web Store and Firefox Add-ons.
+3. Publish a GitHub release whose tag matches the version (e.g. `v1.5.0`). Users on older versions will see the update banner one day later.
+
 ## Requirements
 
 - Google Chrome (or any Chromium-based browser supporting Manifest V3), or Mozilla Firefox
@@ -113,6 +129,7 @@ copilot-batch-search/
 - Loaded categories are cached for the rest of the popup session, so switching back is instant
 - Shows a "Loading prompts..." placeholder while a category loads, and an error message (with retry on next selection) if it fails
 - Quickly switching categories no longer risks showing a stale list from an earlier selection
+- **Update notifications:** the popup checks the latest GitHub release (at most once a day) and shows a dismissible banner with store and release-notes links when a newer version is available; the banner waits one day after the release to allow for store review
 
 ### v1.4.0
 

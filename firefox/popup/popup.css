@@ -28,6 +28,70 @@ header h1 {
   letter-spacing: 0.5px;
 }
 
+/* Update Banner */
+.update-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 8px 10px;
+  background: #134e4a;
+  border: 1px solid #0d9488;
+  border-radius: 6px;
+}
+
+.update-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.update-text {
+  font-size: 12px;
+  color: #ccfbf1;
+}
+
+.update-hint {
+  font-size: 11px;
+  color: #5eead4;
+}
+
+.update-hint a {
+  color: #fff;
+}
+
+.update-link {
+  padding: 4px 10px;
+  background: #0d9488;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.update-link:hover {
+  background: #0f766e;
+}
+
+.update-dismiss {
+  background: none;
+  border: none;
+  color: #5eead4;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.update-dismiss:hover {
+  color: #fff;
+}
+
 /* Mode Toggle */
 .mode-toggle {
   display: flex;

@@ -2,457 +2,406 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoPrompt for Copilot — Batch Prompt Automation for Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot</title>
-  <meta name="description" content="AutoPrompt is a free Chrome extension that automates batch prompts on Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot. Run sample or custom prompts one after another — no copy-paste, fully hands-free. Supports .txt, .csv, and .json files.">
-  <meta name="keywords" content="AutoPrompt, Microsoft Copilot, M365 Copilot, GitHub Copilot, Teams Copilot, batch prompts, Chrome extension, Copilot automation, AI prompts, prompt automation, bulk prompts, Copilot batch, prompt runner, Copilot extension, AI productivity">
-  <meta name="author" content="AutoPrompt">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AutoPrompt for Copilot: run a list of prompts in Copilot, hands-free</title>
+  <meta name="description" content="AutoPrompt is a free Chrome and Firefox extension that runs a list of prompts in Microsoft Copilot, Microsoft 365 Copilot, GitHub Copilot and Teams Copilot, one after another. 5,770 built-in prompts, or import your own .txt, .csv or .json file.">
+  <meta name="keywords" content="AutoPrompt, Microsoft Copilot, M365 Copilot, GitHub Copilot, Teams Copilot, batch prompts, Chrome extension, Firefox add-on, Copilot automation, bulk prompts, prompt runner">
+  <meta name="author" content="Mathinraj">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#0d9488">
+  <meta name="theme-color" content="#071012">
   <meta name="google-site-verification" content="7OHgQl0_ZtSYxF2eXQIzCUngjx1qjT4jGzC4Nbg8K-Q" />
 
-  <!-- Canonical -->
   <link rel="canonical" href="https://auto-prompt-for-copilot.vercel.app/">
 
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://auto-prompt-for-copilot.vercel.app/">
-  <meta property="og:title" content="AutoPrompt for Copilot — Batch Prompt Automation">
-  <meta property="og:description" content="A free Chrome extension to automate batch prompts on Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot. Run hundreds of prompts hands-free with sample or custom mode.">
+  <meta property="og:title" content="AutoPrompt for Copilot: run a list of prompts, hands-free">
+  <meta property="og:description" content="A free browser extension that runs your prompts in Copilot one after another. Works on Microsoft Copilot, Microsoft 365 Copilot, GitHub Copilot and Teams Copilot.">
   <meta property="og:image" content="https://auto-prompt-for-copilot.vercel.app/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="AutoPrompt for Copilot">
   <meta property="og:locale" content="en_US">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://auto-prompt-for-copilot.vercel.app/">
-  <meta name="twitter:title" content="AutoPrompt for Copilot — Batch Prompt Automation">
-  <meta name="twitter:description" content="Automate batch prompts on Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot. Run sample or custom prompts one after another — no copy-paste needed.">
+  <meta name="twitter:title" content="AutoPrompt for Copilot: run a list of prompts, hands-free">
+  <meta name="twitter:description" content="Runs your prompts in Copilot one after another. Microsoft Copilot, Microsoft 365 Copilot, GitHub Copilot and Teams Copilot.">
   <meta name="twitter:image" content="https://auto-prompt-for-copilot.vercel.app/og-image.png">
 
-  <!-- Favicons -->
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/5432a717c1.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="scrollcraft.css">
+  <link rel="stylesheet" href="home.css">
 
-  <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "AutoPrompt for Copilot",
-    "description": "A free Chrome extension that automates batch prompts on Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot. Run sample or custom prompts one after another, hands-free.",
+    "description": "A free browser extension that runs a list of prompts in Microsoft Copilot, Microsoft 365 Copilot, GitHub Copilot and Teams Copilot, one after another, hands-free.",
     "url": "https://auto-prompt-for-copilot.vercel.app/",
     "applicationCategory": "BrowserApplication",
     "operatingSystem": "Chrome, Firefox",
     "browserRequirements": "Requires Google Chrome or Mozilla Firefox",
     "softwareVersion": "1.4.6",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "image": "https://auto-prompt-for-copilot.vercel.app/og-image.png",
     "screenshot": "https://auto-prompt-for-copilot.vercel.app/og-image.png",
     "featureList": [
-      "Batch prompt automation for Microsoft Copilot, M365 Copilot, GitHub Copilot & Teams Copilot",
-      "Built-in sample prompts across multiple categories",
-      "Custom prompts via text, CSV, or JSON files",
-      "Configurable delay between prompts",
-      "Pause, resume, and stop controls",
-      "Live progress tracking with countdown timer",
-      "On-page status overlay"
+      "Runs a list of prompts in Copilot one after another",
+      "Works on Microsoft Copilot, Microsoft 365 Copilot, GitHub Copilot and Teams Copilot",
+      "5,770 built-in sample prompts in 11 categories",
+      "Import prompts from .txt, .csv or .json files",
+      "Delay from 0.1 to 300 seconds between prompts",
+      "Pause, resume, stop, and start from any prompt number",
+      "Live progress and an on-page status overlay"
     ]
   }
   </script>
 </head>
 <body>
 
-  <!-- Skip to content for accessibility -->
-  <a href="#features" class="skip-link">Skip to content</a>
+<a href="#run" class="skip-link">Skip to the demo</a>
+<div class="sc-grain" aria-hidden="true"></div>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <a href="#" class="nav-brand">
-        <span class="nav-logo">⚡</span> AutoPrompt
-      </a>
-      <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#formats">Formats</a>
-        <a href="#install">Install</a>
-        <a href="#feedback">Feedback</a>
-        <a href="changelog.html">Changelog</a>
-      </div>
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
+<!-- Browser chrome: the tab strip is the site navigation -->
+<header class="chrome" id="chrome">
+  <div class="chrome__tabs">
+    <span class="chrome__lights" aria-hidden="true"><i></i><i></i><i></i></span>
+    <nav class="tabs" aria-label="Sections">
+      <a class="tab" href="#run" data-tab="run" aria-current="true"><i class="fa-solid fa-bolt" aria-hidden="true"></i><span>Run a batch</span></a>
+      <a class="tab" href="#controls" data-tab="controls"><i class="fa-solid fa-sliders" aria-hidden="true"></i><span>Controls</span></a>
+      <a class="tab" href="#platforms" data-tab="platforms"><i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Platforms</span></a>
+      <a class="tab" href="#prompts" data-tab="prompts"><i class="fa-solid fa-file-lines" aria-hidden="true"></i><span>Your prompts</span></a>
+      <a class="tab" href="changelog.html"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i><span>What's new</span></a>
+    </nav>
+  </div>
+  <div class="chrome__bar">
+    <span class="chrome__nav" aria-hidden="true">
+      <i class="fa-solid fa-arrow-left"></i><i class="fa-solid fa-arrow-right"></i><i class="fa-solid fa-rotate-right"></i>
+    </span>
+    <div class="omnibox" aria-hidden="true">
+      <i class="fa-solid fa-lock"></i>
+      <span id="omnibox-url">copilot.microsoft.com</span>
+    </div>
+    <div class="chrome__actions">
+      <button type="button" class="chrome__btn" id="open-feedback" aria-controls="feedback" aria-expanded="false">
+        <i class="fa-regular fa-comment" aria-hidden="true"></i><span>Feedback</span>
       </button>
+      <span class="ext-icon" id="ext-icon" title="AutoPrompt for Copilot" aria-hidden="true"><i class="fa-solid fa-bolt"></i></span>
+      <a class="install-btn" data-install href="https://chromewebstore.google.com/detail/nkbdadodgidleldhealhlhndjcanhboo" target="_blank" rel="noopener">
+        <i class="fa-brands fa-chrome" aria-hidden="true" data-install-icon></i><span data-install-label>Add to Chrome</span>
+      </a>
     </div>
-    <!-- Mobile menu -->
-    <div class="mobile-menu hidden" id="mobile-menu">
-      <a href="#features">Features</a>
-      <a href="#how-it-works">How It Works</a>
-      <a href="#formats">Formats</a>
-      <a href="#install">Install</a>
-      <a href="#feedback">Feedback</a>
-      <a href="changelog.html">Changelog</a>
-    </div>
-  </nav>
+  </div>
+</header>
 
-  <main>
+<main>
 
-  <!-- Hero -->
-  <section class="hero" aria-label="Introduction">
-    <div class="hero-glow"></div>
-    <div class="hero-glow-2"></div>
-    <div class="container">
-      <div class="badge">Open Source · Chrome · Firefox</div>
-      <h1>Automate Batch Prompts<br>on <span class="accent">Microsoft Copilot</span>, <span class="accent">M365 Copilot</span>, <span class="accent">GitHub Copilot</span> & <span class="accent">Teams Copilot</span></h1>
-      <p class="tagline">Run hundreds of prompts one after another — no copy-paste, no manual work. Works on all four platforms. 5000+ sample prompts included, or bring your own.</p>
-      <div class="hero-actions">
-        <a href="#install" class="btn btn-primary">Get Started</a>
-        <a href="#features" class="btn btn-ghost">Learn More →</a>
-      </div>
+  <!-- 1. Hero and the run: one long pinned act. Scroll drives the batch. -->
+  <section id="run" class="run" data-sc-act="pin" data-sc-span="4.6" aria-label="Demo: AutoPrompt running a batch in Copilot">
+    <div data-sc-stage class="run__stage">
+      <div class="viewport" id="viewport">
 
-      <!-- Hero Preview -->
-      <div class="hero-preview">
-        <div class="preview-window">
-          <div class="preview-toolbar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-            <span class="preview-title">AutoPrompt Popup</span>
+        <div class="copilot" id="copilot">
+          <div class="copilot__head">
+            <span class="copilot__name"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>Copilot</span>
+            <span class="demo-tag">Demo</span>
+            <span class="copilot__note">Sample answers written for this demo. In real use, Copilot answers.</span>
           </div>
-          <div class="preview-body">
-            <div class="preview-header-bar">AutoPrompt for Copilot</div>
-            <div class="preview-toggle">
-              <span class="toggle-active">Sample</span>
-              <span class="toggle-inactive">Custom</span>
+
+          <div class="ap-overlay" id="ap-overlay" aria-hidden="true"></div>
+
+          <div class="thread" id="thread" aria-live="off">
+            <p class="thread__empty" id="thread-empty">What can I help with today?</p>
+          </div>
+
+          <div class="composer" id="composer">
+            <span class="composer__text" id="composer-text"><span class="composer__placeholder">Message Copilot</span></span>
+            <span class="composer__send" id="composer-send" aria-hidden="true"><i class="fa-solid fa-arrow-up"></i></span>
+          </div>
+        </div>
+
+        <!-- The extension popup, as in popup/popup.html -->
+        <div class="popup-wrap" id="popup-wrap">
+          <div class="tip" id="tip" role="note">
+            <p>Tick your prompts, press <strong>Start</strong>, and walk away. AutoPrompt types each one into Copilot and waits for the full answer before the next.</p>
+          </div>
+
+          <div class="popup" id="popup">
+            <div class="popup__caret" aria-hidden="true"></div>
+            <h1 class="popup__title">AutoPrompt for Copilot</h1>
+
+            <div class="mode" role="group" aria-label="Mode">
+              <span class="mode__btn is-active">Sample</span>
+              <span class="mode__btn">Custom</span>
             </div>
-            <div class="preview-list">
-              <div class="preview-item"><span class="check">✓</span> What are the top 5 AI trends in 2026?</div>
-              <div class="preview-item"><span class="check">✓</span> Explain quantum computing in simple terms</div>
-              <div class="preview-item"><span class="check">✓</span> What is the current state of renewable energy?</div>
+
+            <p class="popup__label">Category</p>
+            <p class="popup__select">Business &amp; Productivity</p>
+
+            <ul class="plist" id="plist" aria-label="Prompts in this demo batch"></ul>
+            <p class="popup__count"><span id="sel-count">5</span> prompts selected</p>
+
+            <div class="popup__settings">
+              <label for="delay">Delay between prompts</label>
+              <select id="delay">
+                <option value="0.5">0.5 seconds</option>
+                <option value="1" selected>1 second</option>
+                <option value="3">3 seconds</option>
+                <option value="5">5 seconds</option>
+              </select>
             </div>
-            <div class="preview-bar-wrap">
-              <div class="preview-bar"></div>
+
+            <div class="progress" id="progress" hidden>
+              <div class="progress__head">
+                <span id="progress-label">0 / 5 prompts</span>
+                <span class="countdown" id="countdown" hidden>Next in 1s</span>
+              </div>
+              <div class="progress__track"><div class="progress__bar" id="progress-bar"></div></div>
             </div>
-            <div class="preview-btn-row">
-              <span class="preview-btn-start">▶ Start</span>
+
+            <p class="status" id="status" role="status" hidden></p>
+
+            <div class="controls">
+              <button type="button" class="pbtn pbtn--start" id="btn-start">Start</button>
+              <button type="button" class="pbtn pbtn--pause" id="btn-pause" hidden>Pause</button>
+              <button type="button" class="pbtn pbtn--resume" id="btn-resume" hidden>Resume</button>
+              <button type="button" class="pbtn pbtn--stop" id="btn-stop" hidden>Stop</button>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats -->
-  <section class="stats">
-    <div class="container stats-grid">
-      <div class="stat">
-        <span class="stat-value">5700+</span>
-        <span class="stat-label">Built-in Prompts</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value">3</span>
-        <span class="stat-label">File Formats</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value">4</span>
-        <span class="stat-label">Copilot Platforms</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value">∞</span>
-        <span class="stat-label">Custom Prompts</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section id="features" class="features">
-    <div class="container">
-      <span class="section-badge">Capabilities</span>
-      <h2 class="section-title">Everything you need for<br>batch prompting</h2>
-      <div class="features-grid">
-
-        <div class="feature-card">
-          <div class="feature-icon">📋</div>
-          <h3>Sample Mode</h3>
-          <p>Built-in categories: General Knowledge, Coding &amp; Tech, Science, Business. Select prompts individually with checkboxes.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">✏️</div>
-          <h3>Custom Mode</h3>
-          <p>Paste prompts directly or upload <code>.txt</code>, <code>.csv</code>, or <code>.json</code> files. Total flexibility.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⏱️</div>
-          <h3>Configurable Delay</h3>
-          <p>Choose from 0.1s to 30s between prompts, or set a custom delay. Sub-second options for rapid-fire batches.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⏯️</div>
-          <h3>Pause / Resume / Stop</h3>
-          <p>Full playback controls. Intervene mid-batch at any time — pause to review, resume, or stop entirely.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <h3>Live Progress</h3>
-          <p>Real-time progress bar, prompt counter, and a live countdown ticker while the batch is running.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🖥️</div>
-          <h3>Page Overlay</h3>
-          <p>A floating overlay on the Copilot tab shows which prompt is active and how long until the next one.</p>
-        </div>
 
       </div>
     </div>
   </section>
 
-  <!-- How It Works -->
-  <section id="how-it-works" class="how-it-works">
-    <div class="container">
-      <span class="section-badge">Workflow</span>
-      <h2 class="section-title">Up and running in 4 steps</h2>
-      <div class="steps-row">
-
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <h3>Open Copilot</h3>
-          <p>Go to <strong>copilot.microsoft.com</strong>, <strong>m365.cloud.microsoft/chat</strong>, <strong>copilot.cloud.microsoft</strong>, <strong>github.com/copilot</strong>, or <strong>Teams Copilot</strong> in any Chrome tab.</p>
+  <!-- 2. Controls: a help window in the product's own words -->
+  <section id="controls" class="sc-section controls-sec" data-sc-act="flow">
+    <div class="sc-wrap">
+      <div class="window help" data-sc-in>
+        <div class="window__bar">
+          <span class="window__title"><i class="fa-regular fa-circle-question" aria-hidden="true"></i> AutoPrompt help</span>
         </div>
-
-        <div class="step-connector"></div>
-
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <h3>Click the Icon</h3>
-          <p>Open the <strong>AutoPrompt</strong> popup from your browser toolbar.</p>
-        </div>
-
-        <div class="step-connector"></div>
-
-        <div class="step-card">
-          <div class="step-num">3</div>
-          <h3>Pick Prompts</h3>
-          <p>Select from <strong>samples</strong> or enter your own in <strong>custom mode</strong>.</p>
-        </div>
-
-        <div class="step-connector"></div>
-
-        <div class="step-card">
-          <div class="step-num">4</div>
-          <h3>Hit Start</h3>
-          <p>Set your delay, press <strong>Start</strong>, and sit back.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- File Formats -->
-  <section id="formats" class="formats">
-    <div class="container">
-      <span class="section-badge">Compatibility</span>
-      <h2 class="section-title">Supported file formats</h2>
-      <p class="section-subtitle">Upload your own prompt files in Custom Mode</p>
-
-      <div class="formats-table-wrap">
-        <table class="formats-table">
-          <thead>
-            <tr>
-              <th>Format</th>
-              <th>Expected Structure</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>.txt</code></td>
-              <td>One prompt per line</td>
-            </tr>
-            <tr>
-              <td><code>.csv</code></td>
-              <td>Optional <code>prompt</code> / <code>query</code> / <code>question</code> header column; last column value used per row</td>
-            </tr>
-            <tr>
-              <td><code>.json</code></td>
-              <td>Array of strings, array of objects with <code>prompt</code>/<code>query</code>/<code>question</code> keys, or <code>{ "prompts": [...] }</code></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Install -->
-  <section id="install" class="install">
-    <div class="container">
-      <span class="section-badge">Setup</span>
-      <h2 class="section-title">Installation</h2>
-      <p class="section-subtitle">Install from your browser's extension store</p>
-
-      <div class="chrome-store-cta">
-        <a href="https://chromewebstore.google.com/detail/nkbdadodgidleldhealhlhndjcanhboo" target="_blank" class="chrome-store-btn">
-          <i class="fa-brands fa-chrome fa-2x chrome-icon"></i>
-          <div class="chrome-store-text">
-            <span class="chrome-store-label">Available on the</span>
-            <span class="chrome-store-name">Chrome Web Store</span>
+        <div class="help__body">
+          <div class="help__intro">
+            <h2 class="help__heading">Everything the popup can do</h2>
+            <p class="help__lede">Pick prompts, set the pace, press Start. You can step in at any point, and AutoPrompt always waits for Copilot to finish answering before it sends the next one.</p>
+            <p class="help__stat"><span class="help__num" data-sc-count="0 5,770" data-sc-count-ms="1500">5,770</span> built-in prompts in 11 categories</p>
           </div>
-        </a>
-        <a href="https://addons.mozilla.org/en-US/firefox/addon/autoprompt-for-copilot/" target="_blank" class="chrome-store-btn">
-          <i class="fa-brands fa-firefox-browser fa-2x chrome-icon"></i>
-          <div class="chrome-store-text">
-            <span class="chrome-store-label">Available on</span>
-            <span class="chrome-store-name">Firefox Add-ons</span>
-          </div>
-        </a>
-        <a href="https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/latest" target="_blank" class="btn btn-outline" style="margin-top: 12px;">
-          <i class="fa-brands fa-github"></i> Download v1.4.6 from GitHub
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Feedback -->
-  <section id="feedback" class="feedback">
-    <div class="container">
-      <span class="section-badge">Feedback</span>
-      <h2 class="section-title">Have feedback or a feature request?</h2>
-      <p class="section-subtitle">We'd love to hear from you. Send us your ideas, bug reports, or suggestions.</p>
-
-      <div class="feedback-card">
-        <div class="feedback-form">
-          <div class="form-group">
-            <label for="fb-email">Your Email <span class="form-optional">(optional)</span></label>
-            <input type="email" id="fb-email" class="form-input" placeholder="you@example.com" autocomplete="email">
-          </div>
-          <div class="form-group">
-            <label for="fb-category">Category</label>
-            <select id="fb-category" class="form-select">
-              <option value="feature">New Feature</option>
-              <option value="improvement">Improvement</option>
-              <option value="bug">Bug Report</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="fb-message">Your Message</label>
-            <textarea id="fb-message" class="form-textarea" rows="4" placeholder="Describe your idea or issue..."></textarea>
-          </div>
-          <div id="fb-status" class="fb-status hidden"></div>
-          <button id="btn-send-feedback" class="btn btn-primary btn-send">
-            <i class="fa-solid fa-paper-plane"></i>
-            Send Feedback
-          </button>
+          <dl class="help__list" data-sc-in data-sc-stagger="60">
+            <div class="help__row">
+              <dt><i class="fa-solid fa-list-check" aria-hidden="true"></i>Sample mode</dt>
+              <dd>Choose a category, from General Knowledge and Coding to five sets of 1,000 questions, and tick the prompts you want.</dd>
+            </div>
+            <div class="help__row">
+              <dt><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>Custom mode</dt>
+              <dd>Paste prompts one per line, or import a <code>.txt</code>, <code>.csv</code> or <code>.json</code> file. Save a set to load it again later.</dd>
+            </div>
+            <div class="help__row">
+              <dt><i class="fa-solid fa-stopwatch" aria-hidden="true"></i>Delay</dt>
+              <dd>Wait anywhere from 0.1 to 300 seconds between prompts.</dd>
+            </div>
+            <div class="help__row">
+              <dt><i class="fa-solid fa-forward-step" aria-hidden="true"></i>Start from</dt>
+              <dd>Begin at any prompt number, like #150, to pick up where you left off.</dd>
+            </div>
+            <div class="help__row">
+              <dt><i class="fa-solid fa-pause" aria-hidden="true"></i>Pause, resume, stop</dt>
+              <dd>Step in whenever you like. The batch picks up exactly where it paused.</dd>
+            </div>
+            <div class="help__row">
+              <dt><i class="fa-solid fa-message" aria-hidden="true"></i>Page overlay</dt>
+              <dd>A small badge on the Copilot tab shows which prompt is running and when the next one goes.</dd>
+            </div>
+            <div class="help__row">
+              <dt><i class="fa-regular fa-bell" aria-hidden="true"></i>Update notices</dt>
+              <dd>The popup tells you when a new version is out, with a link to <a href="changelog.html">what's new</a>.</dd>
+            </div>
+          </dl>
         </div>
       </div>
     </div>
   </section>
 
-  </main>
+  <!-- 3. Platforms: one window per Copilot, travelling sideways -->
+  <section id="platforms" class="platforms" data-sc-act="pan" data-sc-span="3.4" aria-label="Supported Copilot platforms">
+    <div data-sc-stage class="platforms__stage">
+      <div class="rail" data-sc-pan="0.04">
+        <div class="rail__lead">
+          <h2 class="rail__heading">Works in every Copilot</h2>
+          <p class="rail__text">Open any of these in a tab, click the AutoPrompt icon, and press Start. It finds the Copilot tab on its own.</p>
+        </div>
 
-  <!-- Footer -->
-  <footer class="footer" role="contentinfo">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <span class="nav-logo">⚡</span> AutoPrompt for Copilot
-      </div>
-      <span class="footer-dot">&middot;</span>
-      <div class="built-by">
-        Built by <a href="https://www.linkedin.com/in/mathinraj/" target="_blank" rel="noopener noreferrer">Mathinraj <span class="heart">💚</span></a>
+        <article class="pwin" data-domain="copilot.microsoft.com">
+          <div class="pwin__frame" data-sc-tilt="5">
+            <div class="pwin__bar"><span class="pwin__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="pwin__url">copilot.microsoft.com</span></div>
+            <div class="pwin__body" aria-hidden="true">
+              <span class="pwin__badge">Running prompt 2 of 5...</span>
+              <span class="pwin__msg pwin__msg--me">What are the best project management methodologies?</span>
+              <span class="pwin__msg"><b>Scrum:</b> short sprints with a fixed goal. <b>Kanban:</b> a board that limits work in progress.</span>
+              <span class="pwin__msg pwin__msg--me">How to build a strong company culture in a remote team?</span>
+            </div>
+          </div>
+          <h3 class="pwin__name">Microsoft Copilot</h3>
+          <p class="pwin__where"><code>copilot.microsoft.com</code></p>
+        </article>
+
+        <article class="pwin" data-domain="copilot.cloud.microsoft">
+          <div class="pwin__frame" data-sc-tilt="5">
+            <div class="pwin__bar"><span class="pwin__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="pwin__url">copilot.cloud.microsoft/chat</span></div>
+            <div class="pwin__body" aria-hidden="true">
+              <span class="pwin__badge">Running prompt 3 of 5...</span>
+              <span class="pwin__msg pwin__msg--me">What are effective strategies for time management?</span>
+              <span class="pwin__msg"><b>Time-block:</b> reserve calendar slots for focused work and protect them.</span>
+            </div>
+          </div>
+          <h3 class="pwin__name">Microsoft 365 Copilot</h3>
+          <p class="pwin__where"><code>m365.cloud.microsoft/chat</code> and <code>copilot.cloud.microsoft</code></p>
+        </article>
+
+        <article class="pwin" data-domain="github.com/copilot">
+          <div class="pwin__frame" data-sc-tilt="5">
+            <div class="pwin__bar"><span class="pwin__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="pwin__url">github.com/copilot</span></div>
+            <div class="pwin__body" aria-hidden="true">
+              <span class="pwin__badge">Batch 4 / 5 · Next in 1s</span>
+              <span class="pwin__msg pwin__msg--me">Explain the lean startup methodology</span>
+              <span class="pwin__msg">Build, Measure, Learn: ship an MVP, measure real use, then persevere or pivot.</span>
+            </div>
+          </div>
+          <h3 class="pwin__name">GitHub Copilot</h3>
+          <p class="pwin__where"><code>github.com/copilot</code></p>
+        </article>
+
+        <article class="pwin" data-domain="teams.microsoft.com">
+          <div class="pwin__frame" data-sc-tilt="5">
+            <div class="pwin__bar"><span class="pwin__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="pwin__url">teams.microsoft.com</span></div>
+            <div class="pwin__body" aria-hidden="true">
+              <span class="pwin__badge">Running prompt 5 of 5...</span>
+              <span class="pwin__msg pwin__msg--me">What are the key metrics for a SaaS business?</span>
+              <span class="pwin__msg"><b>MRR and ARR</b>, churn, CAC, LTV and net revenue retention.</span>
+            </div>
+          </div>
+          <h3 class="pwin__name">Teams Copilot</h3>
+          <p class="pwin__where"><code>teams.microsoft.com</code> and <code>outlook.office.com</code></p>
+        </article>
+
+        <div class="rail__note">
+          <p>Same popup and the same Start button on all four. Use it in Chrome or Firefox.</p>
+        </div>
       </div>
     </div>
-  </footer>
+  </section>
 
-  <script>
-    // Mobile nav toggle
-    const toggle = document.getElementById('nav-toggle');
-    const menu = document.getElementById('mobile-menu');
-    toggle.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-      toggle.classList.toggle('open');
-    });
-    // Close mobile menu on link click
-    menu.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        menu.classList.add('hidden');
-        toggle.classList.remove('open');
-      });
-    });
+  <!-- 4. Close: a real prompt box, parsed by the extension's own parser -->
+  <section id="prompts" class="sc-section close-sec" data-sc-act="flow">
+    <div class="sc-wrap">
+      <div class="window custom" data-sc-in>
+        <div class="window__bar">
+          <span class="window__title"><i class="fa-solid fa-bolt" aria-hidden="true"></i> AutoPrompt · Custom</span>
+        </div>
 
-    // ── Feedback Form (EmailJS) ──────────────────
-    const EMAILJS_SERVICE_ID  = 'service_em2o2a6';
-    const EMAILJS_TEMPLATE_ID = 'template_6595ut4';
-    const EMAILJS_PUBLIC_KEY  = 'R2Yro3gG1FbXS9fJm';
+        <div class="custom__body">
+          <div class="custom__input">
+            <h2 class="custom__heading">Try it with your own prompts</h2>
 
-    const btnSend   = document.getElementById('btn-send-feedback');
-    const fbEmail   = document.getElementById('fb-email');
-    const fbCat     = document.getElementById('fb-category');
-    const fbMsg     = document.getElementById('fb-message');
-    const fbStatus  = document.getElementById('fb-status');
+            <div class="drop" id="drop">
+              <input type="file" id="file-input" accept=".txt,.csv,.json" class="visually-hidden">
+              <label for="file-input" class="drop__btn">Choose file</label>
+              <span class="drop__hint" id="file-name">or drop a .txt, .csv or .json file here</span>
+            </div>
 
-    function showFbStatus(text, type) {
-      fbStatus.textContent = text;
-      fbStatus.className = 'fb-status ' + type;
-      fbStatus.classList.remove('hidden');
-    }
+            <label for="custom-prompts" class="custom__label">Or paste prompts, one per line</label>
+            <textarea id="custom-prompts" rows="7" spellcheck="false" placeholder="Summarise this week's release notes&#10;Write three subject lines for a launch email&#10;Explain the difference between SQL and NoSQL"></textarea>
 
-    btnSend.addEventListener('click', async () => {
-      const message = fbMsg.value.trim();
-      if (message.length < 10) {
-        showFbStatus('Please enter at least 10 characters.', 'error');
-        return;
-      }
+            <p class="custom__status" id="custom-status" role="status">Nothing loaded yet.</p>
+            <ol class="custom__preview" id="custom-preview" aria-label="Parsed prompts"></ol>
+          </div>
 
-      btnSend.disabled = true;
-      btnSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
+          <aside class="formats" aria-labelledby="formats-title">
+            <h3 class="formats__title" id="formats-title"><i class="fa-regular fa-circle-question" aria-hidden="true"></i> Supported files</h3>
+            <div class="format">
+              <p class="format__ext"><code>.txt</code></p>
+              <p class="format__desc">One prompt per line.</p>
+              <button type="button" class="format__try" data-example="txt">Try an example</button>
+            </div>
+            <div class="format">
+              <p class="format__ext"><code>.csv</code></p>
+              <p class="format__desc">One prompt per row. A <code>prompt</code>, <code>query</code> or <code>question</code> header is optional; the last column is used.</p>
+              <button type="button" class="format__try" data-example="csv">Try an example</button>
+            </div>
+            <div class="format">
+              <p class="format__ext"><code>.json</code></p>
+              <p class="format__desc">An array of strings, objects with a <code>prompt</code>, <code>query</code> or <code>question</code> key, or <code>{ "prompts": [...] }</code>.</p>
+              <button type="button" class="format__try" data-example="json">Try an example</button>
+            </div>
+          </aside>
+        </div>
 
-      try {
-        const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            service_id:  EMAILJS_SERVICE_ID,
-            template_id: EMAILJS_TEMPLATE_ID,
-            user_id:     EMAILJS_PUBLIC_KEY,
-            template_params: {
-              from_email: fbEmail.value.trim() || 'Not provided',
-              category:   fbCat.value,
-              message:    '[Auto Prompt] ' + message,
-              timestamp:  new Date().toISOString(),
-              version:    '1.4.6'
-            }
-          })
-        });
+        <div class="custom__actions">
+          <p class="custom__next" id="custom-next">Add AutoPrompt to your browser, open Copilot, and paste these into Custom mode. Then press Start.</p>
+          <div class="custom__buttons">
+            <button type="button" class="pbtn pbtn--ghost" id="copy-prompts" disabled><i class="fa-regular fa-copy" aria-hidden="true"></i> Copy prompts</button>
+            <a class="pbtn pbtn--start install-cta" data-install href="https://chromewebstore.google.com/detail/nkbdadodgidleldhealhlhndjcanhboo" target="_blank" rel="noopener">
+              <i class="fa-brands fa-chrome" aria-hidden="true" data-install-icon></i><span data-install-label>Add to Chrome</span>
+            </a>
+          </div>
+          <p class="custom__stores">
+            <a href="https://chromewebstore.google.com/detail/nkbdadodgidleldhealhlhndjcanhboo" target="_blank" rel="noopener"><i class="fa-brands fa-chrome" aria-hidden="true"></i> Chrome Web Store</a>
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/autoprompt-for-copilot/" target="_blank" rel="noopener"><i class="fa-brands fa-firefox-browser" aria-hidden="true"></i> Firefox Add-ons</a>
+            <a href="https://github.com/mathinraj/AutoPrompt-for-Copilot/releases/latest" target="_blank" rel="noopener"><i class="fa-brands fa-github" aria-hidden="true"></i> Download v1.4.6 from GitHub</a>
+          </p>
+        </div>
+      </div>
 
-        if (res.ok) {
-          showFbStatus('Thank you! Your feedback has been sent.', 'success');
-          fbEmail.value = '';
-          fbMsg.value = '';
-          fbCat.value = 'feature';
-        } else {
-          throw new Error('Status ' + res.status);
-        }
-      } catch (err) {
-        showFbStatus('Failed to send. Please try again later.', 'error');
-      }
+      <footer class="foot">
+        <span class="foot__brand"><i class="fa-solid fa-bolt" aria-hidden="true"></i> AutoPrompt for Copilot</span>
+        <nav class="foot__links" aria-label="More">
+          <a href="changelog.html">What's new</a>
+          <a href="#feedback" data-open-feedback>Feedback</a>
+          <a href="https://github.com/mathinraj/AutoPrompt-for-Copilot/releases" target="_blank" rel="noopener">Releases</a>
+        </nav>
+        <span class="foot__by">Built by <a href="https://www.linkedin.com/in/mathinraj/" target="_blank" rel="noopener noreferrer">Mathinraj</a></span>
+      </footer>
+    </div>
+  </section>
 
-      btnSend.disabled = false;
-      btnSend.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Feedback';
-    });
-  </script>
+</main>
 
+<!-- Feedback: the browser's side panel -->
+<aside class="side-panel" id="feedback" aria-labelledby="fb-title" hidden>
+  <div class="side-panel__head">
+    <h2 id="fb-title">Feedback</h2>
+    <button type="button" class="side-panel__close" id="close-feedback" aria-label="Close feedback"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+  </div>
+  <p class="side-panel__lede">Found a bug or have an idea? Every message is read.</p>
+  <form class="fb" id="fb-form" method="post" action="#" novalidate>
+    <label for="fb-email">Your email <span class="fb__opt">(optional)</span></label>
+    <input type="email" id="fb-email" placeholder="you@example.com" autocomplete="email">
+    <label for="fb-category">Category</label>
+    <select id="fb-category">
+      <option value="feature">New feature</option>
+      <option value="improvement">Improvement</option>
+      <option value="bug">Bug report</option>
+      <option value="other">Other</option>
+    </select>
+    <label for="fb-message">Your message</label>
+    <textarea id="fb-message" rows="6" placeholder="Describe your idea or issue"></textarea>
+    <p class="fb__status" id="fb-status" role="status" hidden></p>
+    <button type="submit" class="pbtn pbtn--start" id="btn-send-feedback"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send feedback</button>
+  </form>
+</aside>
+<div class="side-scrim" id="side-scrim" hidden></div>
+
+<script src="scrollcraft.js"></script>
+<script src="parser.js"></script>
+<script src="home.js"></script>
 </body>
 </html>

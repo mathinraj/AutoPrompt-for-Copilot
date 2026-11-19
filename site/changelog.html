@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPrompt for Copilot – Changelog &amp; New Features</title>
+  <meta name="description" content="See what's new in every version of AutoPrompt for Copilot — the free browser extension that runs batch prompts on Microsoft Copilot, M365 Copilot, GitHub Copilot and Teams Copilot.">
+  <meta name="theme-color" content="#0d9488">
+  <link rel="canonical" href="https://auto-prompt-for-copilot.vercel.app/changelog.html">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/5432a717c1.js" crossorigin="anonymous"></script>
+  <style>
+    .changelog-hero {
+      padding: 140px 0 60px;
+      text-align: center;
+    }
+
+    .changelog-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      color: #f1f5f9;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .changelog-hero h1 .accent {
+      background: linear-gradient(135deg, #2dd4bf, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .changelog-hero p {
+      font-size: 1.0625rem;
+      color: #64748b;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── Timeline ──────────────────────────── */
+
+    .timeline {
+      position: relative;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      bottom: 80px;
+      left: 52px;
+      width: 2px;
+      background: linear-gradient(180deg, #2dd4bf, #0d9488, #1e293b);
+    }
+
+    /* ── Version block ─────────────────────── */
+
+    .version-block {
+      position: relative;
+      padding-left: 72px;
+      margin-bottom: 56px;
+    }
+
+    .version-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .version-dot {
+      position: absolute;
+      left: 17px;
+      top: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #06090f;
+      border: 3px solid #2dd4bf;
+      z-index: 1;
+    }
+
+    .version-block.latest .version-dot {
+      background: #2dd4bf;
+      box-shadow: 0 0 0 5px rgba(45, 212, 191, 0.18);
+    }
+
+    .version-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .version-tag {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      letter-spacing: -0.01em;
+    }
+
+    .version-date {
+      font-size: 0.8125rem;
+      color: #475569;
+    }
+
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 10px;
+      border-radius: 100px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+    }
+
+    .version-desc {
+      font-size: 0.9375rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* ── Change items ──────────────────────── */
+
+    .change-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .change-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      background: #0c1120;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .change-item:hover {
+      border-color: rgba(45, 212, 191, 0.3);
+    }
+
+    .change-icon {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      margin-top: 1px;
+    }
+
+    .change-icon.feat    { background: rgba(45, 212, 191, 0.12); color: #2dd4bf; }
+    .change-icon.improve { background: rgba(34, 197, 94, 0.12);  color: #4ade80; }
+    .change-icon.fix     { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+
+    .change-content h4 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 2px;
+    }
+
+    .change-content p {
+      font-size: 0.8125rem;
+      color: #94a3b8;
+      line-height: 1.55;
+    }
+
+    /* ── Back link ─────────────────────────── */
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #0c1120;
+      border: 1px solid #1e293b;
+      border-radius: 100px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: all 0.2s;
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 101;
+    }
+
+    .back-link:hover {
+      color: #f1f5f9;
+      border-color: #2dd4bf;
+    }
+
+    @media (max-width: 600px) {
+      .timeline::before { left: 42px; }
+      .version-block { padding-left: 52px; }
+      .version-dot { left: 7px; }
+      .back-link { position: static; margin: 24px 0 0 24px; }
+      .changelog-hero { padding-top: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="/" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back to AutoPrompt
+  </a>
+
+  <main>
+    <section class="changelog-hero">
+      <div class="container">
+        <span class="section-badge">Changelog</span>
+        <h1>What's <span class="accent">New</span></h1>
+        <p>Every feature, improvement, and fix across all versions of AutoPrompt for Copilot.</p>
+      </div>
+    </section>
+
+    <section class="timeline">
+
+      <!-- v1.4.5 -->
+      <div class="version-block latest">
+        <div class="version-dot"></div>
+        <div class="version-header">
+          <span class="version-tag">v1.4.5</span>
+          <span class="version-badge">Latest</span>
+          <span class="version-date">November 2026</span>
+        </div>
+        <p class="version-desc">A faster popup, and a heads-up when a new version is out.</p>
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-icon improve"><i class="fa-solid fa-bolt"></i></div>
+            <div class="change-content">
+              <h4>Faster Popup</h4>
+              <p>The popup used to load all 5,800+ built-in prompts every time it opened. It now loads only the category you pick, and remembers the ones you've already opened, so switching back is instant.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-bell"></i></div>
+            <div class="change-content">
+              <h4>Update Notices</h4>
+              <p>When a new version is released, the popup shows a small banner with a link to your browser's store and the release notes. It waits a day after the release so the store has time to publish it, and you can dismiss it.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon fix"><i class="fa-solid fa-list-check"></i></div>
+            <div class="change-content">
+              <h4>Correct Prompts When Switching Quickly</h4>
+              <p>Changing categories quickly could briefly show prompts from the category you picked before. The list now always matches the category you selected.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.4.0 -->
+      <div class="version-block">
+        <div class="version-dot"></div>
+        <div class="version-header">
+          <span class="version-tag">v1.4.0</span>
+          <span class="version-date">October 2026</span>
+        </div>
+        <p class="version-desc">Works on Microsoft's new address for Microsoft 365 Copilot Chat.</p>
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-globe"></i></div>
+            <div class="change-content">
+              <h4>copilot.cloud.microsoft Support</h4>
+              <p>Microsoft moved Microsoft 365 Copilot Chat to <code>copilot.cloud.microsoft</code>, which made AutoPrompt report "Copilot tab not found". Batches now run there just like on <code>m365.cloud.microsoft/chat</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.3.0 -->
+      <div class="version-block">
+        <div class="version-dot"></div>
+        <div class="version-header">
+          <span class="version-tag">v1.3.0</span>
+          <span class="version-date">June 2026</span>
+        </div>
+        <p class="version-desc">Run batches in Copilot inside Microsoft Teams.</p>
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-people-group"></i></div>
+            <div class="change-content">
+              <h4>Teams Copilot Support</h4>
+              <p>AutoPrompt now works with Copilot in the Teams web app, on <code>teams.microsoft.com</code> and <code>outlook.office.com</code>, bringing it to four Copilot platforms.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon improve"><i class="fa-solid fa-keyboard"></i></div>
+            <div class="change-content">
+              <h4>Reliable Typing in Teams</h4>
+              <p>AutoPrompt waits for the Teams chat box to finish loading and enters each prompt in a way Teams recognizes, so prompts aren't lost or left unsent.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.2.0 -->
+      <div class="version-block">
+        <div class="version-dot"></div>
+        <div class="version-header">
+          <span class="version-tag">v1.2.0</span>
+          <span class="version-date">June 2026</span>
+        </div>
+        <p class="version-desc">M365 Copilot, a Firefox version, thousands of new prompts, and faster batches.</p>
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-building"></i></div>
+            <div class="change-content">
+              <h4>M365 Copilot Support</h4>
+              <p>Run batches on Microsoft 365 Copilot at <code>m365.cloud.microsoft/chat</code>, alongside Microsoft Copilot and GitHub Copilot.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-brands fa-firefox-browser"></i></div>
+            <div class="change-content">
+              <h4>Firefox Version</h4>
+              <p>AutoPrompt is now available for Firefox, with the same features as the Chrome version.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="change-content">
+              <h4>5,700+ Built-in Prompts</h4>
+              <p>New categories: Math Questions (250 and 500) and Questions Sets 1–5 with 1,000 prompts each.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-forward"></i></div>
+            <div class="change-content">
+              <h4>Jump to Prompt</h4>
+              <p>Start a batch from any prompt number, for example to pick up again at prompt #150.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon improve"><i class="fa-solid fa-stopwatch"></i></div>
+            <div class="change-content">
+              <h4>Sub-Second Delays</h4>
+              <p>Set the wait between prompts as low as 0.1 seconds. The default is now 1 second instead of 5.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon improve"><i class="fa-solid fa-gauge-high"></i></div>
+            <div class="change-content">
+              <h4>Smooth With Large Batches</h4>
+              <p>Prompt lists with 1,000 or more prompts now load and scroll smoothly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.1.0 -->
+      <div class="version-block">
+        <div class="version-dot"></div>
+        <div class="version-header">
+          <span class="version-tag">v1.1.0</span>
+          <span class="version-date">May 2026</span>
+        </div>
+        <p class="version-desc">Adds GitHub Copilot.</p>
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-brands fa-github"></i></div>
+            <div class="change-content">
+              <h4>GitHub Copilot Support</h4>
+              <p>Run batches on <code>github.com/copilot</code> as well as Microsoft Copilot. AutoPrompt adapts to each site's chat box automatically.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon improve"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div class="change-content">
+              <h4>Waits for Long Answers</h4>
+              <p>AutoPrompt detects when GitHub Copilot has finished answering, and allows up to 90 seconds for long responses before moving to the next prompt.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.0.0 -->
+      <div class="version-block">
+        <div class="version-dot"></div>
+        <div class="version-header">
+          <span class="version-tag">v1.0.0</span>
+          <span class="version-date">May 2026</span>
+        </div>
+        <p class="version-desc">First release, for Microsoft Copilot.</p>
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div class="change-content">
+              <h4>Sample &amp; Custom Modes</h4>
+              <p>Pick built-in prompts by category, or paste your own, one per line.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-file-import"></i></div>
+            <div class="change-content">
+              <h4>Import From Files</h4>
+              <p>Load prompts from a <code>.txt</code>, <code>.csv</code>, or <code>.json</code> file.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-circle-play"></i></div>
+            <div class="change-content">
+              <h4>Playback Controls</h4>
+              <p>Choose the delay between prompts, and pause, resume, or stop a batch at any time.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-chart-simple"></i></div>
+            <div class="change-content">
+              <h4>Live Progress</h4>
+              <p>A progress bar and countdown in the popup, plus an overlay on the Copilot page showing which prompt is running.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="nav-logo">⚡</span> AutoPrompt for Copilot
+      </div>
+      <span class="footer-dot">&middot;</span>
+      <div class="built-by">
+        Built by <a href="https://www.linkedin.com/in/mathinraj/" target="_blank" rel="noopener noreferrer">Mathinraj <span class="heart">💚</span></a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

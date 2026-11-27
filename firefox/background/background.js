@@ -12,6 +12,8 @@ let isPaused = false;
 let isRunning = false;
 let popupPort = null;
 let nextPromptAt = 0;
+let startOffset = 0; // prompts skipped by \"Start from\", so positions match the full list
+let limitStop = null; // set when Copilot's usage limit stopped the batch
 
 browser.runtime.onConnect.addListener((port) => {
   if (port.name !== 'autoprompt') return;
@@ -23,6 +25,9 @@ browser.runtime.onConnect.addListener((port) => {
         queue = msg.prompts;
         delay = msg.delay;
         tabId = msg.tabId;
+        startOffset = msg.startOffset || 0;
+        limitStop = null;
+        browser.storage.local.remove('limitStop');
         currentIndex = 0;
         isPaused = false;
         isRunning = true;
@@ -71,7 +76,7 @@ function getState() {
   const secondsLeft = nextPromptAt > 0
     ? Math.max(0, Math.ceil((nextPromptAt - Date.now()) / 1000))
     : 0;
-  return { isRunning, isPaused, currentIndex, total: queue.length, secondsLeft, delay };
+  return { isRunning, isPaused, currentIndex, total: queue.length, secondsLeft, delay, limitStop };
 }
 
 function sendToPopup(msg) {
@@ -168,6 +173,20 @@ async function startExecution() {
   }
 }
 
+// Copilot replied that the daily chat limit is used up: stop sending prompts
+// and remember where to pick up, since the rest would fail the same way.
+function stopForLimit() {
+  const at = startOffset + currentIndex + 1;
+  isRunning = false;
+  isPaused = false;
+  nextPromptAt = 0;
+  limitStop = { at, total: startOffset + queue.length, time: Date.now() };
+  browser.storage.local.set({ limitStop });
+  sendOverlay(`Copilot's chat limit reached · stopped at prompt ${at}`);
+  sendToPopup({ action: 'stateUpdate', ...getState() });
+  sendToPopup({ action: 'batchLimit', ...limitStop });
+}
+
 async function runNext() {
   if (!isRunning || isPaused) return;
 
@@ -192,13 +211,24 @@ async function runNext() {
       text: queue[currentIndex]
     });
 
+    if (result && result.limitReached) {
+      stopForLimit();
+      return;
+    }
+
     if (result && !result.ok) {
       sendToPopup({ action: 'batchError', error: result.error });
     }
 
+    let response = null;
     try {
-      await browser.tabs.sendMessage(tabId, { action: 'waitForResponse' });
+      response = await browser.tabs.sendMessage(tabId, { action: 'waitForResponse' });
     } catch {}
+
+    if (response && response.limitReached) {
+      stopForLimit();
+      return;
+    }
 
   } catch (err) {
     sendToPopup({ action: 'batchError', error: err.message });

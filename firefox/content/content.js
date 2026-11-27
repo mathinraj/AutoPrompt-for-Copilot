@@ -81,7 +81,7 @@
     }
 
     if (msg.action === 'waitForResponse') {
-      return waitForResponseToFinish().then(() => ({ done: true }));
+      return waitForResponseToFinish();
     }
   });
 
@@ -206,7 +206,56 @@
       || document.querySelector('button[type="submit"]');
   }
 
+  // --- Usage limit detection ---
+  // Copilot answers with a message like "You've used your daily chat limit.
+  // Please try again tomorrow." Count matching phrases before a prompt is sent
+  // and look for new ones while waiting, so older messages on the page and
+  // prompts that mention a limit themselves are not mistaken for it.
+
+  const LIMIT_PATTERNS = [
+    /daily (?:chat|message|usage) limit/gi,
+    /try again tomorrow/gi,
+    /reached (?:your|the) (?:daily |chat |message |usage )?limit/gi,
+    /(?:chat|message|usage) limit (?:reached|exceeded)/gi,
+    /upgrade to keep going/gi,
+    /upgrade your plan to get more/gi,
+  ];
+  // The "Upgrade to keep going" banner stays above the input box for as long
+  // as the limit lasts, unlike old limit replies left in the conversation.
+  const LIMIT_BANNER = /upgrade to keep going|upgrade your plan to get more copilot/i;
+  let limitBaseline = 0;
+  let limitPromptHits = 0;
+
+  function countLimitHits(text) {
+    return LIMIT_PATTERNS.reduce((n, re) => n + (text.match(re) || []).length, 0);
+  }
+
+  function pageLimitHits() {
+    return document.body ? countLimitHits(document.body.innerText || '') : 0;
+  }
+
+  function limitBannerVisible() {
+    if (!document.body) return false;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (!LIMIT_BANNER.test(node.nodeValue)) continue;
+      const el = node.parentElement;
+      if (el && el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden') return true;
+    }
+    return false;
+  }
+
+  function limitReachedNow() {
+    // The prompt can be on the page twice (input box and sent message).
+    return pageLimitHits() - limitBaseline - limitPromptHits * 2 > 0;
+  }
+
   async function runPrompt(text) {
+    if (limitBannerVisible()) {
+      return { ok: false, limitReached: true, error: "Copilot's daily chat limit has been reached." };
+    }
+    limitBaseline = pageLimitHits();
+    limitPromptHits = countLimitHits(text);
     if (isGitHubCopilot()) {
       return runPromptGitHub(text);
     }
@@ -462,7 +511,25 @@
     }
   }
 
+  // Resolves when the answer has finished, or as soon as a usage limit message
+  // appears, which often shows up without the usual "generating" signals.
   function waitForResponseToFinish() {
+    return new Promise(resolve => {
+      let finished = false;
+      const finish = limitReached => {
+        if (finished) return;
+        finished = true;
+        clearInterval(limitTimer);
+        resolve({ done: true, limitReached });
+      };
+      const limitTimer = setInterval(() => {
+        if (limitReachedNow()) finish(true);
+      }, 700);
+      waitForPlatformResponse().then(() => finish(limitReachedNow()));
+    });
+  }
+
+  function waitForPlatformResponse() {
     if (isGitHubCopilot()) {
       return waitForResponseGitHub();
     }

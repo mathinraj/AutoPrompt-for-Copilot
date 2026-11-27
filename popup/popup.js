@@ -37,7 +37,18 @@ port.onMessage.addListener((msg) => {
     case 'batchError':
       showStatus(`Error: ${msg.error}`, 'error');
       break;
+    case 'batchLimit':
+      isRunning = false;
+      isPaused = false;
+      updateCountdown(0);
+      showIdleUI();
+      showLimitNotice(msg);
+      break;
   }
+});
+
+chrome.storage.local.get('limitStop').then(({ limitStop }) => {
+  if (limitStop && !isRunning) showLimitNotice(limitStop);
 });
 
 // --- Countdown Display ---
@@ -365,6 +376,7 @@ async function startBatch() {
     return;
   }
 
+  chrome.storage.local.remove('limitStop');
   isRunning = true;
   isPaused = false;
   currentIndex = 0;
@@ -381,7 +393,8 @@ async function startBatch() {
     action: 'startBatch',
     prompts: currentPrompts,
     delay: getDelay(),
-    tabId: tab.id
+    tabId: tab.id,
+    startOffset: skipCount
   });
 }
 
@@ -440,8 +453,17 @@ function applyState(state) {
       $('progress-section').classList.remove('hidden');
       updateProgress(totalPrompts, totalPrompts);
       showStatus(`Done! ${totalPrompts} prompts completed.`, 'success');
+    } else if (state.limitStop) {
+      showLimitNotice(state.limitStop);
     }
   }
+}
+
+// Copilot's daily chat limit stopped the batch. Point "Start from" at the
+// prompt that hit the limit so the batch can continue once the limit resets.
+function showLimitNotice({ at, total }) {
+  showStatus(`Copilot's daily chat limit was reached, so AutoPrompt stopped at prompt ${at} of ${total} and sent nothing more. Start from #${at} once the limit resets.`, 'error');
+  $('start-from-input').value = at;
 }
 
 // --- UI Helpers ---

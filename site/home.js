@@ -546,7 +546,7 @@
             category: $('fb-category').value,
             message: '[Auto Prompt] ' + message,
             timestamp: new Date().toISOString(),
-            version: '1.4.6',
+            version: '1.4.7',
           },
         }),
       });

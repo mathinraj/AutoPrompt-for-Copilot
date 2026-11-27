@@ -233,12 +233,38 @@
 
     <section class="timeline">
 
-      <!-- v1.4.6 -->
+      <!-- v1.4.7 -->
       <div class="version-block latest">
         <div class="version-dot"></div>
         <div class="version-header">
-          <span class="version-tag">v1.4.6</span>
+          <span class="version-tag">v1.4.7</span>
           <span class="version-badge">Latest</span>
+          <span class="version-date">November 2026</span>
+        </div>
+        <p class="version-desc">Stops the batch when Copilot's daily chat limit is reached.</p>
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-icon improve"><i class="fa-solid fa-hand"></i></div>
+            <div class="change-content">
+              <h4>Stops at the Daily Chat Limit</h4>
+              <p>When Copilot replies "You've used your daily chat limit" or shows its "Upgrade to keep going" banner, AutoPrompt stops right away and sends nothing more, instead of using up the rest of your list on the same error. If the banner is already showing, no prompt is sent at all.</p>
+            </div>
+          </div>
+          <div class="change-item">
+            <div class="change-icon feat"><i class="fa-solid fa-forward-step"></i></div>
+            <div class="change-content">
+              <h4>Pick Up Where It Stopped</h4>
+              <p>The popup tells you which prompt hit the limit and fills in "Start from prompt #" with it, so you can continue the same list once the limit resets. The message stays until you press Start again.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.4.6 -->
+      <div class="version-block">
+        <div class="version-dot"></div>
+        <div class="version-header">
+          <span class="version-tag">v1.4.6</span>
           <span class="version-date">November 2026</span>
         </div>
         <p class="version-desc">A heads-up in the popup when a new version is out.</p>
